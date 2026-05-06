@@ -136,13 +136,15 @@
     }
 
     function play5() {
-        resetCourt(); clearAll(); setText("초기 세팅: 수비수들이 전체적으로 멀리 떨어져서 수비합니다.");
-        move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80);
-        move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);
-        timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1500));
-        timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); }, 2500));
-        timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 4000));
-        timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
+        resetCourt(); clearAll(); setText("초기 세팅: 수비수들이 전체적으로 멀리 떨어져서 수비(=새깅)합니다.");
+        timeouts.push(setTimeout(() => { move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80); move('x5', 280, 80);}, 500));
+        timeouts.push(setTimeout(() => { move('ball', 60, 190); }, 1000));
+        timeouts.push(setTimeout(() => { setText("1단계: 공을 가진 선수가 수비수 쪽으로 천천히 다가갑니다."); move('o3', 80, 160); move('ball', 90, 150); move('o5', 350, 70);}, 2500));
+        timeouts.push(setTimeout(() => { setText("2단계: 수비수가 다가오지 않으면 점프슛을 던집니다."); move('ball', 290, 50); }, 3500));
+        timeouts.push(setTimeout(() => {move('ball', 90, 150); }, 4500));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); }, 5500));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('o3', 80, 130); move('ball', 85, 120);}, 6000));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('o3', 290, 55); move('ball', 300, 50);}, 7000));
     }
 </script>
 </body>
