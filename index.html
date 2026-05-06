@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>4-Out 1-In 모션 오펜스 시뮬레이터</title>
+<style>
+    body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #f0f0f0; }
+    #court {
+        width: 600px; height: 500px; background-color: #f4c28d;
+        border: 4px solid #333; position: relative; margin: 20px auto; overflow: hidden;
+    }
+    .line { position: absolute; border: 2px solid white; box-sizing: border-box; }
+    .paint { width: 160px; height: 230px; border-bottom: none; left: 220px; top: 0; background-color: #d18b47; }
+    .three-point {
+        width: 480px; height: 480px; border-radius: 50%; left: 60px; top: -140px;
+        clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
+    }
+    .rim { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #e74c3c; left: 285px; top: 40px; background: white; }
+    .player {
+        width: 30px; height: 30px; border-radius: 50%; position: absolute;
+        color: white; font-weight: bold; line-height: 30px; font-size: 14px;
+        transition: all 1s ease-in-out; z-index: 10;
+    }
+    .offense { background-color: #3498db; border: 2px solid #2980b9; }
+    .defense { background-color: transparent; border: 2px solid #c0392b; color: #c0392b; }
+    .ball {
+        width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute;
+        transition: all 0.5s ease-in-out; z-index: 20; border: 1px solid #d35400;
+    }
+    .controls { margin-top: 10px; }
+    button { padding: 10px 15px; margin: 5px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 5px; border: 1px solid #999; }
+    button:hover { background-color: #ddd; }
+    #desc { margin-top: 15px; font-size: 16px; font-weight: bold; color: #333; height: 30px; }
+</style>
+</head>
+<body>
+
+<h2>🏀 4-Out 1-In 모션 오펜스 시뮬레이터</h2>
+
+<div class="controls">
+    <button onclick="play1()">1. 하이포스트 연계 (빅맨 & 컷인)</button>
+    <button onclick="play2()">2. 슬롯 갭 돌파 (가운데 틈새)</button>
+    <button onclick="play3()">3. 딥윙 갭 돌파 (대각선 틈새)</button>
+    <button onclick="play4()">4. 하이포스트 연계(빅맨 패스를 못 줬을 때)</button>
+    <button onclick="resetCourt()" style="background-color: #ffcccc;">초기화</button>
+</div>
+
+<div id="desc">버튼을 눌러 전술 움직임을 확인하세요.</div>
+
+<div id="court">
+    <div class="line paint"></div>
+    <div class="line three-point"></div>
+    <div class="line rim"></div>
+    
+    <!-- 수비수 (X) -->
+    <div id="x1" class="player defense" style="left: 200px; top: 230px;">X1</div>
+    <div id="x2" class="player defense" style="left: 370px; top: 230px;">X2</div>
+    <div id="x3" class="player defense" style="left: 140px; top: 120px;">X3</div>
+    <div id="x4" class="player defense" style="left: 430px; top: 120px;">X4</div>
+    <div id="x5" class="player defense" style="left: 285px; top: 120px;">X5</div>
+
+    <!-- 공격수 (O) -->
+    <div id="o1" class="player offense" style="left: 150px; top: 380px;">O1</div>
+    <div id="o2" class="player offense" style="left: 420px; top: 380px;">O2</div>
+    <div id="o3" class="player offense" style="left: 50px; top: 200px;">O3</div>
+    <div id="o4" class="player offense" style="left: 520px; top: 200px;">O4</div>
+    <div id="o5" class="player offense" style="left: 100px; top: 50px;">O5</div>
+    
+    <!-- 농구공 -->
+    <div id="ball" class="ball" style="left: 170px; top: 370px;"></div>
+</div>
+
+<script>
+    let timeouts = [];
+    function clearAll() { timeouts.forEach(clearTimeout); timeouts = []; }
+    function move(id, x, y) { document.getElementById(id).style.left = x + 'px'; document.getElementById(id).style.top = y + 'px'; }
+    function setText(text) { document.getElementById('desc').innerText = text; }
+
+    function resetCourt() {
+        clearAll();
+        move('x1', 200, 230); move('x2', 370, 230); move('x3', 140, 120); move('x4', 430, 120); move('x5', 240, 45);
+        move('o1', 150, 380); move('o2', 420, 380); move('o3', 50, 200); move('o4', 520, 200); move('o5', 200, 50);
+        move('ball', 170, 370);
+        setText("초기 상태 (수비가 골밑으로 쳐져 있는 2-3 새깅 디펜스)");
+    }
+
+    function play1() {
+        resetCourt(); clearAll(); setText("1단계: 빅맨(O5)이 하이포스트로 올라오며 패스를 받습니다.");
+        timeouts.push(setTimeout(() => { move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180); }, 500));
+        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비 뒷공간(베이스라인)으로 컷인합니다."); move('o3', 50, 80); }, 1200));
+        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비 뒷공간(베이스라인)으로 컷인합니다."); move('o3', 240, 50); }, 2000));
+        timeouts.push(setTimeout(() => { setText("3단계: 빅맨이 컷인하는 동료에게 완벽한 골밑 찬스를 내줍니다."); move('ball', 250, 60); }, 3500));
+    }
+
+    function play2() {
+        resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 수비수 X1과 X2 사이의 '틈'으로 짧게 돌파합니다.");
+        timeouts.push(setTimeout(() => { move('o1', 285, 340); move('ball', 295, 330); move('x1', 220, 240); move('x2', 340, 240);}, 100));
+        timeouts.push(setTimeout(() => { move('o1', 285, 200); move('ball', 295, 190); move('x5', 280, 110);}, 500));
+        timeouts.push(setTimeout(() => { setText("2단계: 두 수비수가 혼란에 빠져 모여들면 숏점퍼를 쏩니다."); move('o5', 220, 50);}, 1500));
+        timeouts.push(setTimeout(() => { move('ball', 300, 50); setText("득점 성공!"); }, 2500));
+    }
+
+    function play3() {
+        resetCourt(); clearAll(); setText("1단계: 공이 딥윙(O3)에게 전달됩니다.");
+        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 500));
+        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비수 X1과 X3 사이 공간으로 대각선 돌파합니다."); move('o3', 140, 180); move('ball', 150, 170); }, 1500));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비가 몰리면 밖으로 빠져나온 슬롯(O1)에게 다시 패스합니다."); move('x1', 170, 200); move('x3', 140, 150); move('o1', 100, 330); }, 2500));
+        timeouts.push(setTimeout(() => { move('ball', 120, 350); }, 4000));
+        timeouts.push(setTimeout(() => { setText("4단계: 만들어진 공간을 활용하여 돌파나 컷인을 합니다."); move('o2', 285, 150);}, 5000));
+        timeouts.push(setTimeout(() => { move('ball', 285, 150); }, 5500));
+    }
+
+    function play4() {
+        resetCourt(); clearAll(); setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다.");
+        move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);
+        timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1000));
+        timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); }, 2500));
+        timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 4000));
+        timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
+    }
+</script>
+</body>
+</html>
