@@ -135,8 +135,9 @@
         timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
     }
 
-        function play4() {
-        resetCourt(); clearAll(); setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다.");
+        function play5() {
+        resetCourt(); clearAll(); setText("초기 세팅: 수비수들이 전체적으로 멀리 떨어져서 수비합니다.");
+        move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80);
         move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);
         timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1500));
         timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); }, 2500));
