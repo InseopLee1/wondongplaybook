@@ -42,6 +42,7 @@
     <button onclick="play2()">2. 슬롯 갭 돌파 (가운데 틈새)</button>
     <button onclick="play3()">3. 딥윙 갭 돌파 (대각선 틈새)</button>
     <button onclick="play4()">4. 하이포스트 연계(빅맨 패스를 못 줬을 때)</button>
+    <button onclick="play5()">5. 수비수가 아주 멀리 떨어져서 수비할 때</button>
     <button onclick="resetCourt()" style="background-color: #ffcccc;">초기화</button>
 </div>
 
@@ -92,7 +93,7 @@
         timeouts.push(setTimeout(() => { setText("3단계: 빅맨이 컷인하는 동료에게 완벽한 골밑 찬스를 내줍니다."); move('ball', 250, 60); }, 4000));
     }
 
-function play2() {
+    function play2() {
         resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 수비수 X1과 X2 사이의 '틈'으로 짧게 돌파합니다.");
         
         // 이동 명령을 하나로 합치고, 여유롭게 0.5초(500ms) 뒤에 출발하도록 수정
@@ -129,6 +130,15 @@ function play2() {
         resetCourt(); clearAll(); setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다.");
         move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);
         timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1000));
+        timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); }, 2500));
+        timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 4000));
+        timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
+    }
+
+        function play4() {
+        resetCourt(); clearAll(); setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다.");, 500
+        move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);
+        timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1500));
         timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); }, 2500));
         timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 4000));
         timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
