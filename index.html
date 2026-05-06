@@ -25,7 +25,7 @@
     .defense { background-color: transparent; border: 2px solid #c0392b; color: #c0392b; }
     .ball {
         width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute;
-        transition: all 0.5s ease-in-out; z-index: 20; border: 1px solid #d35400;
+        transition: all 1s ease-in-out; z-index: 20; border: 1px solid #d35400;
     }
     .controls { margin-top: 10px; }
     button { padding: 10px 15px; margin: 5px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 5px; border: 1px solid #999; }
@@ -92,12 +92,27 @@
         timeouts.push(setTimeout(() => { setText("3단계: 빅맨이 컷인하는 동료에게 완벽한 골밑 찬스를 내줍니다."); move('ball', 250, 60); }, 4000));
     }
 
-    function play2() {
+function play2() {
         resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 수비수 X1과 X2 사이의 '틈'으로 짧게 돌파합니다.");
-        timeouts.push(setTimeout(() => { move('o1', 285, 340); move('ball', 295, 330); move('x1', 220, 240); move('x2', 340, 240);}, 500));
-        timeouts.push(setTimeout(() => { move('o1', 285, 200); move('ball', 295, 190); move('x5', 280, 110);}, 1500));
-        timeouts.push(setTimeout(() => { setText("2단계: 두 수비수가 혼란에 빠져 모여들면 숏점퍼를 쏩니다."); move('o5', 220, 50);}, 2500));
-        timeouts.push(setTimeout(() => { move('ball', 300, 50); setText("득점 성공!"); }, 3200));
+        
+        // 이동 명령을 하나로 합치고, 여유롭게 0.5초(500ms) 뒤에 출발하도록 수정
+        timeouts.push(setTimeout(() => { 
+            move('o1', 285, 200); 
+            move('ball', 295, 190); 
+            move('x1', 220, 240); 
+            move('x2', 340, 240);
+            move('x5', 280, 110);
+        }, 500));
+
+        timeouts.push(setTimeout(() => { 
+            setText("2단계: 두 수비수가 혼란에 빠져 모여들면 숏점퍼를 쏩니다."); 
+            move('o5', 220, 50);
+        }, 1500));
+
+        timeouts.push(setTimeout(() => { 
+            move('ball', 300, 50); 
+            setText("득점 성공!"); 
+        }, 2500));
     }
 
     function play3() {
