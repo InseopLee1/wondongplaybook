@@ -70,6 +70,7 @@
     <button onclick="play6()">6. 슬롯 패스 & 컷인</button>
     <button onclick="play7()">7. 딥윙 패스 & 컷인</button>
     <button onclick="play8()">8. 로테이션 후 스윙 돌파</button>
+    <button onclick="play9()">9. 갭드라이브 & 킥아웃</button>
     <button onclick="resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
@@ -123,23 +124,18 @@
     function move(id, x, y) { document.getElementById(id).style.left = x + 'px'; document.getElementById(id).style.top = y + 'px'; }
     function setText(text) { document.getElementById('desc').innerText = text; }
 
-    // [수정된 부분] 완벽하고 깔끔한 초기화를 위한 함수
     function resetCourt() {
-        clearAll(); // 진행 중인 모든 예약 시간(setTimeout) 취소
+        clearAll(); 
         
-        // 1. 초기화할 때 엉키지 않도록 선수와 공의 '스르륵 이동하는 효과'를 잠시 끕니다.
         const elements = document.querySelectorAll('.player, .ball');
         elements.forEach(el => el.style.transition = 'none');
 
-        // 2. 원래 자리로 순간이동 시킵니다.
         move('x1', 200, 230); move('x2', 370, 230); move('x3', 140, 120); move('x4', 430, 120); move('x5', 240, 45);
         move('o1', 150, 380); move('o2', 420, 380); move('o3', 50, 200); move('o4', 520, 200); move('o5', 200, 50);
         move('ball', 170, 370);
 
-        // 3. 브라우저가 강제로 화면을 새로고침(Reflow)하도록 만듭니다. (순간이동 확정)
         document.getElementById('court').offsetHeight;
 
-        // 4. 다음 작전을 위해 '스르륵 이동하는 효과'를 다시 켭니다.
         elements.forEach(el => el.style.transition = 'all 1s ease-in-out');
 
         setText("초기 상태 (수비가 골밑으로 쳐져 있는 2-3 새깅 디펜스)");
@@ -196,7 +192,7 @@
         timeouts.push(setTimeout(() => { move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80); move('x5', 280, 80);  move('o5', 350, 70);}, 500));
         timeouts.push(setTimeout(() => { move('ball', 60, 190); }, 1000));
         timeouts.push(setTimeout(() => { setText("1단계: 공을 가진 선수가 수비수 쪽으로 천천히 다가갑니다."); move('o3', 90, 140); move('ball', 95, 135);}, 2500));
-        timeouts.push(setTimeout(() => { setText("2단계: 적당한 위치에서 멈춰서 드리블을 유지한 채 골대를 쳐다봅니다.");} 3500));
+        timeouts.push(setTimeout(() => { setText("2단계: 적당한 위치에서 멈춰서 드리블을 유지한 채 골대를 쳐다봅니다."); }, 3500));
         timeouts.push(setTimeout(() => { setText("3단계: 수비수가 다가오지 않으면 점프슛을 던집니다."); move('ball', 290, 50); }, 4500));
         timeouts.push(setTimeout(() => {move('ball', 90, 150); }, 5500));
         timeouts.push(setTimeout(() => { setText("4단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); move('o3', 80, 130); move('ball', 85, 120);}, 6500));
@@ -252,7 +248,7 @@
             move('x3', 200, 80); move('x5', 285, 80); 
         }, 2000));
         timeouts.push(setTimeout(() => { 
-            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 스윙패스'를 준비합니다. ** 단, 돌파나 점프슛 찬스가 있다면 주저없이 득점을 노립니다."); 
+            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 스윙패스'를 준비합니다. 단, 돌파나 점프슛 찬스가 있다면 주저없이 득점을 노립니다."); 
             move('o3', 520, 200); 
             move('o1', 50, 200); move('ball', 70, 190); 
             move('o2', 150, 380); 
@@ -275,4 +271,46 @@
             move('o4', 285, 60); move('ball', 300, 50); 
         }, 9000));
     }
+
+    // [수정된 부분] 9. 갭드라이브 & 킥아웃 (코너 드리프트 및 클로즈아웃 역이용 림어택 반영)
+    function play9() {
+        resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 반대편 슬롯(O2)에게 패스합니다.");
+        timeouts.push(setTimeout(() => { 
+            move('ball', 400, 370);
+            move('x1', 230, 230); move('x2', 400, 230); 
+        }, 1000));
+        
+        timeouts.push(setTimeout(() => { 
+            setText("1단계: O2가 수비수 X2와 X4 사이의 초기 틈(갭)으로 돌파하고, 동시에 O4는 공간 창출을 위해 코너 쪽으로 이동합니다."); 
+            move('o2', 400, 180); move('ball', 410, 170); 
+        }, 2200));
+        timeouts.push(setTimeout(() => { 
+            move('o4', 540, 60); 
+        }, 3000));
+        
+        timeouts.push(setTimeout(() => { 
+            setText("2단계: O2의 돌파를 막기 위해 윙을 수비하던 X4가 급하게 헬프 디펜스를 들어옵니다."); 
+            move('x4', 420, 150); 
+        }, 4000));
+        
+        timeouts.push(setTimeout(() => { 
+            setText("3단계: O2는 코너로 빠진 O4에게 정확한 킥아웃 패스를 내줍니다."); 
+            move('ball', 530, 70); 
+        }, 5500));
+        
+        timeouts.push(setTimeout(() => { 
+            setText("4단계: 오픈 찬스를 막기 위해 X4가 급하게 클로즈아웃을 나오지만, O4가 수비의 역동작을 이용해 곧바로 림어택(돌파)합니다!"); 
+            // X4가 코너 쪽으로 달려나감
+            move('x4', 510, 80); 
+            // O4는 림을 향해 드라이브
+            move('o4', 340, 60); move('ball', 350, 6오후 12:43 2026-05-070); 
+        }, 7000));
+        
+        timeouts.push(setTimeout(() => { 
+            setText("5단계: 완벽한 돌파로 득점 성공!"); 
+            move('o4', 285, 60); move('ball', 300, 50); 
+        }, 8500));
+    }
 </script>
+</body>
+</html>
