@@ -341,13 +341,13 @@
         // 패스 연결
         timeouts.push(setTimeout(() => {
             setText("2단계: 시야가 열린 틈으로 O1이 정확하게 패스를 찔러줍니다.");
-            move('ball', 120, 240);
+            move('ball', 140, 210);
         }, 3500));
 
         // 슈팅
         timeouts.push(setTimeout(() => {
             setText("3단계: 공을 받은 O3가 림을 향해 돌아서며 지체 없이 숏점퍼를 던집니다.");
-            move('o3', 130, 210); move('ball', 140, 200); 
+            move('o3', 120, 200); move('ball', 120, 200); 
         }, 5000));
 
         // 득점 성공
