@@ -123,11 +123,25 @@
     function move(id, x, y) { document.getElementById(id).style.left = x + 'px'; document.getElementById(id).style.top = y + 'px'; }
     function setText(text) { document.getElementById('desc').innerText = text; }
 
+    // [수정된 부분] 완벽하고 깔끔한 초기화를 위한 함수
     function resetCourt() {
-        clearAll();
+        clearAll(); // 진행 중인 모든 예약 시간(setTimeout) 취소
+        
+        // 1. 초기화할 때 엉키지 않도록 선수와 공의 '스르륵 이동하는 효과'를 잠시 끕니다.
+        const elements = document.querySelectorAll('.player, .ball');
+        elements.forEach(el => el.style.transition = 'none');
+
+        // 2. 원래 자리로 순간이동 시킵니다.
         move('x1', 200, 230); move('x2', 370, 230); move('x3', 140, 120); move('x4', 430, 120); move('x5', 240, 45);
         move('o1', 150, 380); move('o2', 420, 380); move('o3', 50, 200); move('o4', 520, 200); move('o5', 200, 50);
         move('ball', 170, 370);
+
+        // 3. 브라우저가 강제로 화면을 새로고침(Reflow)하도록 만듭니다. (순간이동 확정)
+        document.getElementById('court').offsetHeight;
+
+        // 4. 다음 작전을 위해 '스르륵 이동하는 효과'를 다시 켭니다.
+        elements.forEach(el => el.style.transition = 'all 1s ease-in-out');
+
         setText("초기 상태 (수비가 골밑으로 쳐져 있는 2-3 새깅 디펜스)");
     }
 
@@ -261,5 +275,3 @@
         }, 9000));
     }
 </script>
-</body>
-</html>
