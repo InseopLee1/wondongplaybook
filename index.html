@@ -20,7 +20,7 @@
     }
     button:hover, button:active { background-color: #ddd; }
     
-    /* [추가됨] 현재 눌린 버튼을 노란색으로 강조하는 클래스 */
+    /* 현재 눌린 버튼을 노란색으로 강조하는 클래스 */
     .active-btn {
         background-color: #ffeb3b !important; /* 노란색 배경 */
         border: 2px solid #f57f17 !important; /* 주황색 테두리 */
@@ -55,13 +55,15 @@
     .player {
         width: 30px; height: 30px; border-radius: 50%; position: absolute;
         color: white; font-weight: bold; line-height: 30px; font-size: 14px;
-        transition: all 1s ease-in-out; z-index: 10;
+        transition: all 2s ease-in-out; /* 1초에서 2초로 변경하여 이동 속도 2배 느리게 */
+        z-index: 10;
     }
     .offense { background-color: #3498db; border: 2px solid #2980b9; }
     .defense { background-color: transparent; border: 2px solid #c0392b; color: #c0392b; }
     .ball {
         width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute;
-        transition: all 1s ease-in-out; z-index: 20; border: 1px solid #d35400;
+        transition: all 2s ease-in-out; /* 1초에서 2초로 변경 */
+        z-index: 20; border: 1px solid #d35400;
     }
 </style>
 </head>
@@ -108,7 +110,7 @@
 </div>
 
 <script>
-    // [추가됨] 클릭된 버튼만 노란색으로 만드는 함수
+    // 클릭된 버튼만 노란색으로 만드는 함수
     function setActiveBtn(clickedBtn) {
         const buttons = document.querySelectorAll('.controls button');
         buttons.forEach(btn => btn.classList.remove('active-btn'));
@@ -152,17 +154,19 @@
 
         document.getElementById('court').offsetHeight;
 
-        elements.forEach(el => el.style.transition = 'all 1s ease-in-out');
+        // 초기화 시에도 2초(2s) 트랜지션 적용
+        elements.forEach(el => el.style.transition = 'all 2s ease-in-out');
 
         setText("초기 상태 (수비가 골밑으로 쳐져 있는 2-3 새깅 디펜스)");
     }
 
+    // 모든 setTimeout 시간을 기존 대비 2배로 증가시킴
     function play1() {
         resetCourt(); clearAll(); setText("1단계: 빅맨(O5)이 하이포스트로 올라오며 패스를 받습니다.");
-        timeouts.push(setTimeout(() => { move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180); }, 1000));
-        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비 뒷공간(베이스라인)으로 컷인합니다."); move('o3', 50, 80); }, 2000));
-        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비 뒷공간(베이스라인)으로 컷인합니다."); move('o3', 240, 50); }, 3000));
-        timeouts.push(setTimeout(() => { setText("3단계: 빅맨이 컷인하는 동료에게 완벽한 골밑 찬스를 내줍니다."); move('ball', 250, 60); }, 4000));
+        timeouts.push(setTimeout(() => { move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180); }, 2000));
+        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비 뒷공간(베이스라인)으로 컷인합니다."); move('o3', 50, 80); }, 4000));
+        timeouts.push(setTimeout(() => { move('o3', 240, 50); }, 6000));
+        timeouts.push(setTimeout(() => { setText("3단계: 빅맨이 컷인하는 동료에게 완벽한 골밑 찬스를 내줍니다."); move('ball', 250, 60); }, 8000));
     }
 
     function play2() {
@@ -173,62 +177,62 @@
             move('x1', 220, 240); 
             move('x2', 340, 240);
             move('x5', 280, 110);
-        }, 500));
+        }, 1000));
         timeouts.push(setTimeout(() => { 
             setText("2단계: 두 수비수가 혼란에 빠져 모여들면 숏점퍼를 쏩니다."); 
             move('o5', 220, 50);
-        }, 1500));
+        }, 3000));
         timeouts.push(setTimeout(() => { 
             move('ball', 300, 50); 
             setText("득점 성공!"); 
-        }, 2500));
+        }, 5000));
     }
 
     function play3() {
         resetCourt(); clearAll(); setText("1단계: 공이 딥윙(O3)에게 전달됩니다.");
-        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 1000));
-        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비수 X1과 X3 사이 공간으로 대각선 돌파합니다."); move('o3', 140, 180); move('ball', 150, 170); }, 2500));
-        timeouts.push(setTimeout(() => { setText("3단계: 수비가 몰리면 밖으로 빠져나온 슬롯(O1)에게 다시 패스합니다."); move('x1', 170, 200); move('x3', 140, 150); move('o1', 100, 330); }, 3500));
-        timeouts.push(setTimeout(() => { move('ball', 120, 350); }, 4500));
-        timeouts.push(setTimeout(() => { setText("4단계: 만들어진 공간을 활용하여 돌파나 컷인을 합니다."); move('o2', 285, 150);}, 5500));
-        timeouts.push(setTimeout(() => { move('ball', 285, 150); }, 6500));
+        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 2000));
+        timeouts.push(setTimeout(() => { setText("2단계: 딥윙(O3)이 수비수 X1과 X3 사이 공간으로 대각선 돌파합니다."); move('o3', 140, 180); move('ball', 150, 170); }, 5000));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비가 몰리면 밖으로 빠져나온 슬롯(O1)에게 다시 패스합니다."); move('x1', 170, 200); move('x3', 140, 150); move('o1', 100, 330); }, 7000));
+        timeouts.push(setTimeout(() => { move('ball', 120, 350); }, 9000));
+        timeouts.push(setTimeout(() => { setText("4단계: 만들어진 공간을 활용하여 돌파나 컷인을 합니다."); move('o2', 285, 150);}, 11000));
+        timeouts.push(setTimeout(() => { move('ball', 285, 150); }, 13000));
     }
 
     function play4() {
         resetCourt(); clearAll(); setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다.");
-        timeouts.push(setTimeout(() => { move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);}, 150));
-        timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 1000));
-        timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); move('o3', 520, 80); move('o4', 420, 380); }, 2500));
-        timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 4000));
-        timeouts.push(setTimeout(() => {move('ball', 300, 50); }, 5000));
+        timeouts.push(setTimeout(() => { move('o5', 285, 230); move('ball', 290, 220); move('x5', 285, 180);}, 300));
+        timeouts.push(setTimeout(() => { setText("1단계: 딥윙(O3)이 베이스라인으로 뛰어 수비(X3)를 골밑으로 끌고 갑니다."); move('o3', 200, 50); move('x3', 170, 80); }, 2000));
+        timeouts.push(setTimeout(() => { setText("2단계: 빈자리로 슬롯(O1)이 내려오고, O2도 이동하여 밸런스를 맞춥니다."); move('o1', 75, 150); move('o2', 150, 380); move('o3', 520, 80); move('o4', 420, 380); }, 5000));
+        timeouts.push(setTimeout(() => { setText("3단계: 완벽한 노마크 상태가 된 O1에게 패스하여 슛을 던집니다."); move('ball', 85, 145); }, 8000));
+        timeouts.push(setTimeout(() => { move('ball', 300, 50); }, 10000));
     }
 
     function play5() {
         resetCourt(); clearAll(); setText("초기 세팅: 수비수들이 전체적으로 멀리 떨어져서 수비(=새깅)합니다.");
-        timeouts.push(setTimeout(() => { move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80); move('x5', 280, 80);  move('o5', 350, 70);}, 500));
-        timeouts.push(setTimeout(() => { move('ball', 60, 190); }, 1000));
-        timeouts.push(setTimeout(() => { setText("1단계: 공을 가진 선수가 수비수 쪽으로 천천히 다가갑니다."); move('o3', 90, 140); move('ball', 95, 135);}, 2500));
-        timeouts.push(setTimeout(() => { setText("2단계: 적당한 위치에서 멈춰서 드리블을 유지한 채 골대를 쳐다봅니다."); }, 3500));
-        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 다가오지 않으면 점프슛을 던집니다."); move('ball', 290, 50); }, 4500));
-        timeouts.push(setTimeout(() => {move('ball', 90, 150); }, 5500));
-        timeouts.push(setTimeout(() => { setText("4단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); move('o3', 80, 130); move('ball', 85, 120);}, 6500));
-        timeouts.push(setTimeout(() => { move('o3', 290, 55); move('ball', 300, 50);}, 8000));
+        timeouts.push(setTimeout(() => { move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 80); move('x4', 380, 80); move('x5', 280, 80);  move('o5', 350, 70);}, 1000));
+        timeouts.push(setTimeout(() => { move('ball', 60, 190); }, 2000));
+        timeouts.push(setTimeout(() => { setText("1단계: 공을 가진 선수가 수비수 쪽으로 천천히 다가갑니다."); move('o3', 90, 140); move('ball', 95, 135);}, 5000));
+        timeouts.push(setTimeout(() => { setText("2단계: 적당한 위치에서 멈춰서 드리블을 유지한 채 골대를 쳐다봅니다."); }, 7000));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 다가오지 않으면 점프슛을 던집니다."); move('ball', 290, 50); }, 9000));
+        timeouts.push(setTimeout(() => { move('ball', 90, 150); }, 11000));
+        timeouts.push(setTimeout(() => { setText("4단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); move('o3', 80, 130); move('ball', 85, 120);}, 13000));
+        timeouts.push(setTimeout(() => { move('o3', 290, 55); move('ball', 300, 50);}, 16000));
     }
 
     function play6() {
         resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 같은 쪽 딥윙(O3)에게 패스합니다.");
-        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 500));
+        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 1000));
         timeouts.push(setTimeout(() => { 
             setText("2단계: 패스 직후, 수비 중앙을 가로질러 림을 향해 직선으로 컷인합니다."); 
             move('o1', 285, 80); 
             move('x1', 250, 180); move('x2', 320, 180); move('x5', 285, 100);
-        }, 1500));
+        }, 3000));
         timeouts.push(setTimeout(() => { 
             setText("3단계: 반대편으로 빠져나가고, 나머지 선수들이 자리를 당겨 채웁니다."); 
             move('o1', 520, 50); 
             move('o2', 150, 380); 
             move('o4', 420, 380); 
-        }, 3000));
+        }, 6000));
     }
 
     function play7() {
@@ -237,35 +241,35 @@
         timeouts.push(setTimeout(() => { 
             setText("1단계: 딥윙(O3)이 위쪽 슬롯(O1)에게 패스합니다."); 
             move('ball', 170, 370); 
-        }, 1000));
+        }, 2000));
         timeouts.push(setTimeout(() => { 
             setText("2단계: 패스 직후, 수비수 등 뒤(베이스라인)를 타고 컷인합니다."); 
             move('o3', 285, 50); 
             move('x3', 200, 80); move('x5', 285, 80);
-        }, 2500));
+        }, 5000));
         timeouts.push(setTimeout(() => { 
             setText("3단계: 반대편으로 빠지고, O1이 딥윙으로 내려오며 자리를 맞춥니다."); 
             move('o3', 520, 100); 
             move('o1', 50, 200); move('ball', 70, 190);
             move('o2', 150, 380); 
             move('o4', 420, 380); 
-        }, 4000));
+        }, 8000));
     }
     
     function play8() {
         resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 딥윙(O3)에게 먼저 패스하며 공격을 시작합니다.");
         timeouts.push(setTimeout(() => {
             move('ball', 70, 190);
-        }, 500));
+        }, 1000));
         timeouts.push(setTimeout(() => { 
             setText("1단계: O3가 리턴 패스를 주고 베이스라인으로 컷인하여 수비를 끕니다.");
             move('ball', 170, 370); 
             move('o3', 285, 50);    
             move('x3', 200, 80); 
             move('x5', 285, 80); 
-        }, 2000));
+        }, 4000));
         timeouts.push(setTimeout(() => { 
-            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 스윙패스'를 준비합니다. 단, 돌파나 점프슛 찬스가 있다면 주저없이 득점을 노립니다."); 
+            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 스윙패스'를 준비합니다."); 
             move('o3', 520, 200); 
             move('o1', 50, 200); 
             move('ball', 70, 190); 
@@ -273,24 +277,24 @@
             move('o4', 420, 380); 
             move('x1', 120, 200); 
             move('x2', 250, 230); 
-        }, 3500));
+        }, 7000));
         timeouts.push(setTimeout(() => { 
             setText("3단계: 수비가 없는 반대편으로 빠르고 길게 패스를 돌립니다 (스윙패스)."); 
             move('ball', 150, 370); 
-        }, 5500));
+        }, 11000));
         timeouts.push(setTimeout(() => { 
             move('ball', 420, 370); 
-        }, 6500));
+        }, 13000));
         timeouts.push(setTimeout(() => { 
             setText("4단계: 넓은 틈(갭)을 확보한 반대편 선수가 망설임 없이 돌파하여 득점합니다."); 
             move('o4', 320, 150); 
             move('ball', 330, 140); 
             move('x4', 380, 150); 
-        }, 8000));
+        }, 16000));
         timeouts.push(setTimeout(() => { 
             move('o4', 285, 60); 
             move('ball', 300, 50); 
-        }, 9000));
+        }, 18000));
     }
 
     function play9() {
@@ -299,40 +303,40 @@
             move('ball', 400, 370);
             move('x1', 230, 230);
             move('x4', 420, 140);
-        }, 1000));
+        }, 2000));
         
         timeouts.push(setTimeout(() => { 
             setText("1단계: O2가 수비수 X2와 X4 사이의 초기 틈(갭)으로 돌파하고, 동시에 O4는 공간 창출을 위해 코너 쪽으로 이동합니다."); 
             move('o2', 420, 190); 
             move('ball', 410, 170); 
-        }, 2200));
+        }, 4400));
         timeouts.push(setTimeout(() => { 
             move('o4', 550, 70); 
-        }, 3000));
+        }, 6000));
         
         timeouts.push(setTimeout(() => { 
             setText("2단계: O2의 돌파를 막기 위해 윙을 수비하던 X4가 급하게 헬프 디펜스를 들어옵니다."); 
             move('x4', 420, 160); 
-        }, 4000));
+        }, 8000));
         
         timeouts.push(setTimeout(() => { 
             setText("3단계: O2는 코너로 빠진 O4에게 정확한 킥아웃 패스를 내줍니다."); 
             move('o4', 500, 60); 
             move('ball', 490, 60); 
-        }, 5500));
+        }, 11000));
         
         timeouts.push(setTimeout(() => { 
             setText("4단계: 오픈 찬스를 막기 위해 X4가 급하게 클로즈아웃을 나오지만, O4가 수비의 역동작을 이용해 곧바로 림어택(돌파)합니다!"); 
             move('x4', 480, 70); 
             move('o4', 340, 60); 
             move('ball', 350, 60); 
-        }, 7000));
+        }, 14000));
         
         timeouts.push(setTimeout(() => { 
             setText("5단계: 완벽한 돌파로 득점 성공!"); 
             move('o4', 285, 60); 
             move('ball', 300, 50); 
-        }, 8500));
+        }, 17000));
     }
 
     function play10() {
@@ -340,27 +344,27 @@
 
         timeouts.push(setTimeout(() => {
             move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 100); move('x4', 380, 100); move('x5', 280, 100);
-        }, 500));
+        }, 1000));
 
         timeouts.push(setTimeout(() => {
             setText("1단계: 딥윙(O3)이 수비수 X1과 X3 사이의 틈(수비가 없는 사이 공간)으로 진입합니다.");
             move('o3', 130, 220); 
-        }, 2000));
+        }, 4000));
 
         timeouts.push(setTimeout(() => {
             setText("2단계: 시야가 열린 틈으로 O1이 정확하게 패스를 찔러줍니다.");
             move('ball', 140, 210);
-        }, 3500));
+        }, 7000));
 
         timeouts.push(setTimeout(() => {
             setText("3단계: 공을 받은 O3가 림을 향해 돌아서며 지체 없이 숏점퍼를 던집니다.");
             move('o3', 140, 200); move('ball', 120, 200); 
-        }, 5000));
+        }, 10000));
 
         timeouts.push(setTimeout(() => {
             move('ball', 290, 50); 
             setText("4단계: 제자리에 서있지 않고 빈 공간을 영리하게 찾아 움직인 덕분에 득점 성공!");
-        }, 6000));
+        }, 12000));
     }
 </script>
 </body>
