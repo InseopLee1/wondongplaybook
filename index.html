@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -71,6 +71,7 @@
     <button onclick="play7()">7. 딥윙 패스 & 컷인</button>
     <button onclick="play8()">8. 로테이션 후 스윙 돌파</button>
     <button onclick="play9()">9. 갭드라이브 & 킥아웃</button>
+    <button onclick="play10()">10. 오프볼 빈 공간 찾기 (리로케이션)</button>
     <button onclick="resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
@@ -277,7 +278,7 @@
         }, 9000));
     }
 
-    // [수정된 부분] 9. 갭드라이브 & 킥아웃 (코너 드리프트 및 클로즈아웃 역이용 림어택 반영)
+    // 9. 갭드라이브 & 킥아웃 (코너 드리프트 및 클로즈아웃 역이용 림어택 반영)
     function play9() {
         resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 반대편 슬롯(O2)에게 패스합니다.");
         timeouts.push(setTimeout(() => { 
@@ -320,6 +321,40 @@
             move('o4', 285, 60); 
             move('ball', 300, 50); 
         }, 8500));
+    }
+
+    // [추가된 부분] 10. 오프볼 빈 공간 찾기 (리로케이션)
+    function play10() {
+        resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 공을 잡고 있으나 수비가 쳐져(새깅) 패스 길이 좁습니다.");
+
+        // 수비 새깅 세팅 (수비수들이 골밑으로 물러남)
+        timeouts.push(setTimeout(() => {
+            move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 100); move('x4', 380, 100); move('x5', 280, 100);
+        }, 500));
+
+        // O3 사선 이동 (소프트 스팟)
+        timeouts.push(setTimeout(() => {
+            setText("1단계: 딥윙(O3)이 수비수 X1과 X3 사이의 틈(수비가 없는 사이 공간)으로 진입합니다.");
+            move('o3', 130, 220); 
+        }, 2000));
+
+        // 패스 연결
+        timeouts.push(setTimeout(() => {
+            setText("2단계: 시야가 열린 틈으로 O1이 정확하게 패스를 찔러줍니다.");
+            move('ball', 120, 240);
+        }, 3500));
+
+        // 슈팅
+        timeouts.push(setTimeout(() => {
+            setText("3단계: 공을 받은 O3가 림을 향해 돌아서며 지체 없이 숏점퍼를 던집니다.");
+            move('o3', 130, 210); move('ball', 140, 200); 
+        }, 5000));
+
+        // 득점 성공
+        timeouts.push(setTimeout(() => {
+            move('ball', 290, 50); 
+            setText("4단계: 제자리에 서있지 않고 빈 공간을 영리하게 찾아 움직인 덕분에 득점 성공!");
+        }, 6000));
     }
 </script>
 </body>
