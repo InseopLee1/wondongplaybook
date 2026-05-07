@@ -2,13 +2,41 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>4-Out 1-In 모션 오펜스 시뮬레이터</title>
 <style>
-    body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #f0f0f0; }
+    body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; padding: 10px 0; }
+    h2 { font-size: 20px; margin: 5px 0 15px 0; color: #333; }
+    
+    /* 모바일 환경에 맞춘 버튼 레이아웃 (Flexbox 적용) */
+    .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 10px; max-width: 600px; margin: 0 auto; }
+    button { 
+        flex: 1 1 45%; /* 모바일에서 2개씩 나란히 배치 */
+        padding: 12px 5px; font-size: 13px; font-weight: bold; cursor: pointer; 
+        border-radius: 8px; border: 1px solid #aaa; background-color: #fff;
+        touch-action: manipulation; /* 모바일 터치 딜레이 제거 */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover, button:active { background-color: #ddd; }
+    
+    #desc { 
+        margin: 15px auto; font-size: 15px; font-weight: bold; color: #111; 
+        min-height: 45px; max-width: 580px; word-break: keep-all; padding: 0 10px; line-height: 1.4;
+    }
+
+    /* 코트 화면이 잘리지 않도록 감싸는 반응형 래퍼 */
+    #court-wrapper { 
+        width: 100%; display: flex; justify-content: center; overflow: hidden; margin-top: 10px;
+    }
+    
+    /* 기존 코트 크기를 유지하되 JS로 스케일링 */
     #court {
         width: 600px; height: 500px; background-color: #f4c28d;
-        border: 4px solid #333; position: relative; margin: 20px auto; overflow: hidden;
+        border: 4px solid #333; position: relative; flex-shrink: 0;
+        transform-origin: top center; /* 축소의 기준점을 맨 위 정중앙으로 설정 */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
+    
     .line { position: absolute; border: 2px solid white; box-sizing: border-box; }
     .paint { width: 160px; height: 230px; border-bottom: none; left: 220px; top: 0; background-color: #d18b47; }
     .three-point {
@@ -27,54 +55,69 @@
         width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute;
         transition: all 1s ease-in-out; z-index: 20; border: 1px solid #d35400;
     }
-    .controls { margin-top: 10px; }
-    button { padding: 10px 15px; margin: 5px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 5px; border: 1px solid #999; }
-    button:hover { background-color: #ddd; }
-    #desc { margin-top: 15px; font-size: 16px; font-weight: bold; color: #333; height: 30px; }
 </style>
 </head>
 <body>
 
-<h2>🏀 4-Out 1-In 모션 오펜스 시뮬레이터</h2>
+<h2>🏀 4-Out 1-In 모션 오펜스</h2>
 
 <div class="controls">
-    <button onclick="play1()">1. 하이포스트 연계 (빅맨 & 컷인)</button>
-    <button onclick="play2()">2. 슬롯 갭 돌파 (가운데 틈새)</button>
-    <button onclick="play3()">3. 딥윙 갭 돌파 (대각선 틈새)</button>
-    <button onclick="play4()">4. 하이포스트 연계(빅맨 패스를 못 줬을 때)</button>
-    <button onclick="play5()">5. 수비수가 아주 멀리 떨어져서 수비할 때</button>
-    <button onclick="play6()">6. 슬롯 선수가 패스를 주고 컷인할 때</button>
-    <button onclick="play7()">7. 딥윙 선수가 패스를 주고 컷인할 때</button>
-    <button onclick="play8()">8. 로테이션 후 파생 공격 (반대편 스윙 & 돌파)</button>
-    <button onclick="resetCourt()" style="background-color: #ffcccc;">초기화</button>
+    <button onclick="play1()">1. 하이포스트 (빅맨 패스)</button>
+    <button onclick="play2()">2. 슬롯 갭 돌파 (정면 틈)</button>
+    <button onclick="play3()">3. 딥윙 갭 돌파 (측면 틈)</button>
+    <button onclick="play4()">4. 하이포스트 (도미노 이동)</button>
+    <button onclick="play5()">5. 새깅 디펜스 (수비 쳐질때)</button>
+    <button onclick="play6()">6. 슬롯 패스 & 컷인</button>
+    <button onclick="play7()">7. 딥윙 패스 & 컷인</button>
+    <button onclick="play8()">8. 로테이션 후 스윙 돌파</button>
+    <button onclick="resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
 <div id="desc">버튼을 눌러 전술 움직임을 확인하세요.</div>
 
-<div id="court">
-    <div class="line paint"></div>
-    <div class="line three-point"></div>
-    <div class="line rim"></div>
-    
-    <!-- 수비수 (X) -->
-    <div id="x1" class="player defense" style="left: 200px; top: 230px;">X1</div>
-    <div id="x2" class="player defense" style="left: 370px; top: 230px;">X2</div>
-    <div id="x3" class="player defense" style="left: 140px; top: 120px;">X3</div>
-    <div id="x4" class="player defense" style="left: 430px; top: 120px;">X4</div>
-    <div id="x5" class="player defense" style="left: 240px; top: 45px;">X5</div>
+<div id="court-wrapper">
+    <div id="court">
+        <div class="line paint"></div>
+        <div class="line three-point"></div>
+        <div class="line rim"></div>
+        
+        <div id="x1" class="player defense" style="left: 200px; top: 230px;">X1</div>
+        <div id="x2" class="player defense" style="left: 370px; top: 230px;">X2</div>
+        <div id="x3" class="player defense" style="left: 140px; top: 120px;">X3</div>
+        <div id="x4" class="player defense" style="left: 430px; top: 120px;">X4</div>
+        <div id="x5" class="player defense" style="left: 240px; top: 45px;">X5</div>
 
-    <!-- 공격수 (O) -->
-    <div id="o1" class="player offense" style="left: 150px; top: 380px;">O1</div>
-    <div id="o2" class="player offense" style="left: 420px; top: 380px;">O2</div>
-    <div id="o3" class="player offense" style="left: 50px; top: 200px;">O3</div>
-    <div id="o4" class="player offense" style="left: 520px; top: 200px;">O4</div>
-    <div id="o5" class="player offense" style="left: 200px; top: 50px;">O5</div>
-    
-    <!-- 농구공 -->
-    <div id="ball" class="ball" style="left: 170px; top: 370px;"></div>
+        <div id="o1" class="player offense" style="left: 150px; top: 380px;">O1</div>
+        <div id="o2" class="player offense" style="left: 420px; top: 380px;">O2</div>
+        <div id="o3" class="player offense" style="left: 50px; top: 200px;">O3</div>
+        <div id="o4" class="player offense" style="left: 520px; top: 200px;">O4</div>
+        <div id="o5" class="player offense" style="left: 200px; top: 50px;">O5</div>
+        
+        <div id="ball" class="ball" style="left: 170px; top: 370px;"></div>
+    </div>
 </div>
 
 <script>
+    // 스마트폰 화면 너비에 맞춰 코트 크기를 자동 조절하는 함수
+    function scaleCourtForMobile() {
+        const wrapper = document.getElementById('court-wrapper');
+        const court = document.getElementById('court');
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < 640) {
+            const scaleValue = (screenWidth - 20) / 600; // 좌우 여백 20px 확보
+            court.style.transform = `scale(${scaleValue})`;
+            wrapper.style.height = `${500 * scaleValue + 20}px`; 
+        } else {
+            court.style.transform = `scale(1)`;
+            wrapper.style.height = `520px`;
+        }
+    }
+    
+    // 창 크기가 바뀌거나 로드될 때마다 실행
+    window.addEventListener('resize', scaleCourtForMobile);
+    window.addEventListener('load', scaleCourtForMobile);
+
     let timeouts = [];
     function clearAll() { timeouts.forEach(clearTimeout); timeouts = []; }
     function move(id, x, y) { document.getElementById(id).style.left = x + 'px'; document.getElementById(id).style.top = y + 'px'; }
@@ -98,8 +141,6 @@
 
     function play2() {
         resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 수비수 X1과 X2 사이의 '틈'으로 짧게 돌파합니다.");
-        
-        // 이동 명령을 하나로 합치고, 여유롭게 0.5초(500ms) 뒤에 출발하도록 수정
         timeouts.push(setTimeout(() => { 
             move('o1', 285, 200); 
             move('ball', 295, 190); 
@@ -107,12 +148,10 @@
             move('x2', 340, 240);
             move('x5', 280, 110);
         }, 500));
-
         timeouts.push(setTimeout(() => { 
             setText("2단계: 두 수비수가 혼란에 빠져 모여들면 숏점퍼를 쏩니다."); 
             move('o5', 220, 50);
         }, 1500));
-
         timeouts.push(setTimeout(() => { 
             move('ball', 300, 50); 
             setText("득점 성공!"); 
@@ -145,119 +184,80 @@
         timeouts.push(setTimeout(() => { setText("1단계: 공을 가진 선수가 수비수 쪽으로 천천히 다가갑니다."); move('o3', 90, 140); move('ball', 95, 135);}, 2500));
         timeouts.push(setTimeout(() => { setText("2단계: 수비수가 다가오지 않으면 점프슛을 던집니다."); move('ball', 290, 50); }, 3500));
         timeouts.push(setTimeout(() => {move('ball', 90, 150); }, 4500));
-        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); }, 5500));
-        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('o3', 80, 130); move('ball', 85, 120);}, 6000));
-        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('o3', 290, 55); move('ball', 300, 50);}, 7000));
+        timeouts.push(setTimeout(() => { setText("3단계: 수비수가 급하게 다가오면 돌파합니다."); move('x3', 100, 140); move('o3', 80, 130); move('ball', 85, 120);}, 5500));
+        timeouts.push(setTimeout(() => { move('o3', 290, 55); move('ball', 300, 50);}, 7000));
     }
 
     function play6() {
         resetCourt(); clearAll(); setText("1단계: 슬롯(O1)이 같은 쪽 딥윙(O3)에게 패스합니다.");
-        
-        // 1. 패스
-        timeouts.push(setTimeout(() => { 
-            move('ball', 70, 190); 
-        }, 500));
-        
-        // 2. 직선 컷인
+        timeouts.push(setTimeout(() => { move('ball', 70, 190); }, 500));
         timeouts.push(setTimeout(() => { 
             setText("2단계: 패스 직후, 수비 중앙을 가로질러 림을 향해 직선으로 컷인합니다."); 
             move('o1', 285, 80); 
-            // 수비가 가운데로 살짝 쏠리는 효과
             move('x1', 250, 180); move('x2', 320, 180); move('x5', 285, 100);
         }, 1500));
-        
-        // 3. 클리어 아웃 및 빈자리 채우기 (도미노)
         timeouts.push(setTimeout(() => { 
-            setText("3단계: 반대편으로 빠져나가고(골밑에서 머무르지 말고), 나머지 선수들이 자리를 당겨 채웁니다."); 
-            // O1은 반대편 코너로 빠짐
+            setText("3단계: 반대편으로 빠져나가고, 나머지 선수들이 자리를 당겨 채웁니다."); 
             move('o1', 520, 50); 
-            // O2는 O1의 원래 자리로 수평 이동
             move('o2', 150, 380); 
-            // O4는 O2의 원래 자리로 위로 이동
             move('o4', 420, 380); 
         }, 3000));
     }
 
     function play7() {
         resetCourt(); clearAll(); setText("초기 세팅: 딥윙(O3)이 공을 잡고 시작합니다.");
-        
-        // 초기 공 위치를 딥윙(O3)으로 세팅
         move('ball', 70, 190); 
-        
-        // 1. 패스
         timeouts.push(setTimeout(() => { 
             setText("1단계: 딥윙(O3)이 위쪽 슬롯(O1)에게 패스합니다."); 
             move('ball', 170, 370); 
         }, 1000));
-        
-        // 2. 베이스라인 컷인
         timeouts.push(setTimeout(() => { 
             setText("2단계: 패스 직후, 수비수 등 뒤(베이스라인)를 타고 컷인합니다."); 
             move('o3', 285, 50); 
-            // 컷인하는 선수를 보고 수비가 베이스라인으로 쳐짐
             move('x3', 200, 80); move('x5', 285, 80);
         }, 2500));
-        
-        // 3. 클리어 아웃 및 빈자리 채우기 (도미노)
         timeouts.push(setTimeout(() => { 
             setText("3단계: 반대편으로 빠지고, O1이 딥윙으로 내려오며 자리를 맞춥니다."); 
-            // O3는 반대편 딥윙으로 크게 돌아 나감
             move('o3', 520, 100); 
-            // O1은 비어있는 딥윙으로 드리블하며 내려옴 (Sink)
             move('o1', 50, 200); move('ball', 70, 190);
-            // O2는 O1의 자리로 이동
             move('o2', 150, 380); 
-            // O4는 O2의 자리로 이동
             move('o4', 420, 380); 
         }, 4000));
     }
     
-function play8() {
+    function play8() {
         resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 딥윙(O3)에게 먼저 패스하며 공격을 시작합니다.");
-        
-        // 1. O1 -> O3 첫 패스 (시작을 자연스럽게 보여주기 위해 0.5초 뒤 출발)
         timeouts.push(setTimeout(() => {
-            move('ball', 70, 190); // O1에서 O3로 공 이동
+            move('ball', 70, 190);
         }, 500));
-
-        // 2. O3 -> O1 리턴 패스 및 O3 골밑 컷인 (첫 패스가 완전히 도착하고 0.5초 쉰 후 실행)
         timeouts.push(setTimeout(() => { 
             setText("1단계: O3가 리턴 패스를 주고 베이스라인으로 컷인하여 수비를 끕니다.");
-            move('ball', 170, 370); // O3가 다시 O1에게 패스
-            move('o3', 285, 50);    // O3 골밑 컷인
-            move('x3', 200, 80); move('x5', 285, 80); // 수비가 컷인 막으러 쏠림
+            move('ball', 170, 370); 
+            move('o3', 285, 50);    
+            move('x3', 200, 80); move('x5', 285, 80); 
         }, 2000));
-
-        // 3. 도미노 이동 완료 (왼쪽에 수비 갇힘)
         timeouts.push(setTimeout(() => { 
-            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 전환(스윙패스)'을 준비합니다."); 
-            move('o3', 520, 200); // O3 반대편 딥윙으로 클리어아웃
-            move('o1', 50, 200); move('ball', 70, 190); // O1 딥윙으로 내려옴(Sink)
-            move('o2', 150, 380); // O2 슬롯 이동
-            move('o4', 420, 380); // O4 슬롯 이동
-            // 수비가 왼쪽 외곽을 막기 위해 완전히 쏠림
+            setText("2단계: 로테이션 완료 후 골밑과 왼쪽이 막히면, '반대편 스윙패스'를 준비합니다."); 
+            move('o3', 520, 200); 
+            move('o1', 50, 200); move('ball', 70, 190); 
+            move('o2', 150, 380); 
+            move('o4', 420, 380); 
             move('x1', 120, 200); move('x2', 250, 230); 
         }, 3500));
-
-        // 4. 스윙 패스 (O1 -> O2 -> O4)
         timeouts.push(setTimeout(() => { 
             setText("3단계: 수비가 없는 반대편으로 빠르고 길게 패스를 돌립니다 (스윙패스)."); 
-            move('ball', 150, 370); // O1 -> O2 패스
+            move('ball', 150, 370); 
         }, 5500));
-
         timeouts.push(setTimeout(() => { 
-            move('ball', 420, 370); // O2 -> O4 패스
+            move('ball', 420, 370); 
         }, 6500));
-
-        // 5. 반대편 돌파 (에이스의 역할)
         timeouts.push(setTimeout(() => { 
             setText("4단계: 넓은 틈(갭)을 확보한 반대편 선수가 망설임 없이 돌파하여 득점합니다."); 
-            move('o4', 320, 150); move('ball', 330, 140); // 대각선 갭 돌파
-            move('x4', 380, 150); // 뒤늦게 X4가 따라와보지만 늦음
+            move('o4', 320, 150); move('ball', 330, 140); 
+            move('x4', 380, 150); 
         }, 8000));
-
         timeouts.push(setTimeout(() => { 
-            move('o4', 285, 60); move('ball', 300, 50); // 레이업 마무리
+            move('o4', 285, 60); move('ball', 300, 50); 
         }, 9000));
     }
 </script>
