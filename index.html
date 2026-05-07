@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -16,8 +16,16 @@
         border-radius: 8px; border: 1px solid #aaa; background-color: #fff;
         touch-action: manipulation; /* 모바일 터치 딜레이 제거 */
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: background-color 0.2s; /* 부드러운 색상 전환 효과 */
     }
     button:hover, button:active { background-color: #ddd; }
+    
+    /* [추가됨] 현재 눌린 버튼을 노란색으로 강조하는 클래스 */
+    .active-btn {
+        background-color: #ffeb3b !important; /* 노란색 배경 */
+        border: 2px solid #f57f17 !important; /* 주황색 테두리 */
+        color: #000 !important;
+    }
     
     #desc { 
         margin: 15px auto; font-size: 15px; font-weight: bold; color: #111; 
@@ -62,17 +70,17 @@
 <h2>🏀 4-Out 1-In 모션 오펜스</h2>
 
 <div class="controls">
-    <button onclick="play1()">1. 하이포스트 (빅맨 패스)</button>
-    <button onclick="play2()">2. 슬롯 갭 돌파 (정면 틈)</button>
-    <button onclick="play3()">3. 딥윙 갭 돌파 (측면 틈)</button>
-    <button onclick="play4()">4. 하이포스트 (도미노 이동)</button>
-    <button onclick="play5()">5. 새깅 디펜스 (수비 쳐질때)</button>
-    <button onclick="play6()">6. 슬롯 패스 & 컷인</button>
-    <button onclick="play7()">7. 딥윙 패스 & 컷인</button>
-    <button onclick="play8()">8. 로테이션 후 스윙 돌파</button>
-    <button onclick="play9()">9. 갭드라이브 & 킥아웃</button>
-    <button onclick="play10()">10. 오프볼 빈 공간 찾기 (리로케이션)</button>
-    <button onclick="resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
+    <button onclick="setActiveBtn(this); play1()">1. 하이포스트 (빅맨 패스)</button>
+    <button onclick="setActiveBtn(this); play2()">2. 슬롯 갭 돌파 (정면 틈)</button>
+    <button onclick="setActiveBtn(this); play3()">3. 딥윙 갭 돌파 (측면 틈)</button>
+    <button onclick="setActiveBtn(this); play4()">4. 하이포스트 (도미노 이동)</button>
+    <button onclick="setActiveBtn(this); play5()">5. 새깅 디펜스 (수비 쳐질때)</button>
+    <button onclick="setActiveBtn(this); play6()">6. 슬롯 패스 & 컷인</button>
+    <button onclick="setActiveBtn(this); play7()">7. 딥윙 패스 & 컷인</button>
+    <button onclick="setActiveBtn(this); play8()">8. 로테이션 후 스윙 돌파</button>
+    <button onclick="setActiveBtn(this); play9()">9. 갭드라이브 & 킥아웃</button>
+    <button onclick="setActiveBtn(this); play10()">10. 오프볼 빈 공간 찾기 (리로케이션)</button>
+    <button onclick="setActiveBtn(this); resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
 <div id="desc">버튼을 눌러 전술 움직임을 확인하세요.</div>
@@ -100,6 +108,13 @@
 </div>
 
 <script>
+    // [추가됨] 클릭된 버튼만 노란색으로 만드는 함수
+    function setActiveBtn(clickedBtn) {
+        const buttons = document.querySelectorAll('.controls button');
+        buttons.forEach(btn => btn.classList.remove('active-btn'));
+        clickedBtn.classList.add('active-btn');
+    }
+
     // 스마트폰 화면 너비에 맞춰 코트 크기를 자동 조절하는 함수
     function scaleCourtForMobile() {
         const wrapper = document.getElementById('court-wrapper');
@@ -278,7 +293,6 @@
         }, 9000));
     }
 
-    // 9. 갭드라이브 & 킥아웃 (코너 드리프트 및 클로즈아웃 역이용 림어택 반영)
     function play9() {
         resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 반대편 슬롯(O2)에게 패스합니다.");
         timeouts.push(setTimeout(() => { 
@@ -309,9 +323,7 @@
         
         timeouts.push(setTimeout(() => { 
             setText("4단계: 오픈 찬스를 막기 위해 X4가 급하게 클로즈아웃을 나오지만, O4가 수비의 역동작을 이용해 곧바로 림어택(돌파)합니다!"); 
-            // X4가 코너 쪽으로 달려나감
             move('x4', 480, 70); 
-            // O4는 림을 향해 드라이브
             move('o4', 340, 60); 
             move('ball', 350, 60); 
         }, 7000));
@@ -323,34 +335,28 @@
         }, 8500));
     }
 
-    // [추가된 부분] 10. 오프볼 빈 공간 찾기 (리로케이션)
     function play10() {
         resetCourt(); clearAll(); setText("초기 세팅: 슬롯(O1)이 공을 잡고 있으나 수비가 쳐져(새깅) 패스 길이 좁습니다.");
 
-        // 수비 새깅 세팅 (수비수들이 골밑으로 물러남)
         timeouts.push(setTimeout(() => {
             move('x1', 230, 180); move('x2', 310, 180); move('x3', 150, 100); move('x4', 380, 100); move('x5', 280, 100);
         }, 500));
 
-        // O3 사선 이동 (소프트 스팟)
         timeouts.push(setTimeout(() => {
             setText("1단계: 딥윙(O3)이 수비수 X1과 X3 사이의 틈(수비가 없는 사이 공간)으로 진입합니다.");
             move('o3', 130, 220); 
         }, 2000));
 
-        // 패스 연결
         timeouts.push(setTimeout(() => {
             setText("2단계: 시야가 열린 틈으로 O1이 정확하게 패스를 찔러줍니다.");
             move('ball', 140, 210);
         }, 3500));
 
-        // 슈팅
         timeouts.push(setTimeout(() => {
             setText("3단계: 공을 받은 O3가 림을 향해 돌아서며 지체 없이 숏점퍼를 던집니다.");
             move('o3', 140, 200); move('ball', 120, 200); 
         }, 5000));
 
-        // 득점 성공
         timeouts.push(setTimeout(() => {
             move('ball', 290, 50); 
             setText("4단계: 제자리에 서있지 않고 빈 공간을 영리하게 찾아 움직인 덕분에 득점 성공!");
