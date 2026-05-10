@@ -82,6 +82,7 @@
     <button onclick="setActiveBtn(this); play8()">8. 로테이션 후 스윙 돌파</button>
     <button onclick="setActiveBtn(this); play9()">9. 갭드라이브 & 킥아웃</button>
     <button onclick="setActiveBtn(this); play10()">10. 오프볼 빈 공간 찾기 (리로케이션)</button>
+    <button onclick="setActiveBtn(this); play11()">11. 드리블드라이브 & 백도어 컷</button>
     <button onclick="setActiveBtn(this); resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
@@ -365,6 +366,42 @@
             move('ball', 290, 50); 
             setText("4단계: 제자리에 서있지 않고 빈 공간을 영리하게 찾아 움직인 덕분에 득점 성공!");
         }, 12000));
+    }
+    
+    // 11. 드리블 앳 (동료를 향해 드리블 할 때의 백도어 컷 룰)
+    function play11() {
+        resetCourt(); clearAll(); setText("초기 세팅: 패스 길이 막혀, 슬롯(O1)이 딥윙(O3) 방향으로 직접 드리블을 시작합니다.");
+
+        // 수비 세팅 및 공 위치
+        timeouts.push(setTimeout(() => {
+            move('x1', 200, 230); move('x2', 370, 230); move('x3', 100, 150); 
+        }, 500));
+
+        // 1단계: Dribble At (동료를 향해 드리블)
+        timeouts.push(setTimeout(() => {
+            setText("1단계: [드리블 앳] 슬롯(O1)이 공간을 창출하기 위해 동료(O3)의 자리를 향해 드리블을 칩니다.");
+            move('o1', 80, 280); move('ball', 90, 270);
+            move('x1', 130, 230); // X1이 드리블을 따라감
+        }, 1500));
+
+        // 2단계: Backdoor Cut (백도어 컷)
+        timeouts.push(setTimeout(() => {
+            setText("2단계: [공간 비우기 룰] 동료가 내 자리로 오면, 딥윙(O3)은 수비수(X3)의 등 뒤를 파고드는 백도어 컷을 합니다.");
+            move('o3', 260, 60); 
+            move('x3', 80, 180); // X3는 다가오는 공을 보느라 O3를 놓침
+        }, 3000));
+
+        // 3단계: 패스
+        timeouts.push(setTimeout(() => {
+            setText("3단계: 컷인하는 O3의 타이밍에 맞춰 바운스 패스를 찔러줍니다.");
+            move('ball', 250, 70);
+        }, 4500));
+
+        // 4단계: 득점 성공
+        timeouts.push(setTimeout(() => {
+            move('o3', 285, 50); move('ball', 300, 50);
+            setText("4단계: 막힌 혈을 뚫어내는 완벽한 백도어 컷 득점 성공!");
+        }, 5500));
     }
 </script>
 </body>
