@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>농구부 스킬업 쇼츠 라이브러리</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Malgun Gothic', sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+    
+    header {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+
+    .nav-box {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .nav-btn {
+        display: inline-block;
+        padding: 10px 25px;
+        background-color: #34495e;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        transition: 0.3s;
+        border: 1px solid #7f8c8d;
+    }
+
+    .nav-btn:hover {
+        background-color: #2c3e50;
+        border-color: #e67e22;
+    }
+
+    /* 그리드 레이아웃: 모바일에서는 1열, 태블릿 이상에서는 2~3열 */
+    .shorts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .video-card {
+        background: #1e1e1e;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+        transition: transform 0.3s;
+        border: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .video-card:hover {
+        transform: translateY(-5px);
+        border-color: #e67e22;
+    }
+
+    /* 유튜브 쇼츠 비율(9:16) 유지를 위한 래퍼 */
+    .iframe-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 177.77%; /* 16:9 비율의 역수 (16/9 = 1.7777) */
+        background-color: #000;
+    }
+
+    .iframe-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-info {
+        padding: 15px;
+    }
+
+    .video-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #f1c40f;
+        margin-bottom: 8px;
+    }
+
+    .video-desc {
+        font-size: 13px;
+        color: #aaa;
+        line-height: 1.4;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #2980b9;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-right: 5px;
+        margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🏀 스킬 트레이닝 쇼츠 라이브러리</h1>
+</header>
+
+<div class="nav-box">
+    <a href="index.html" class="nav-btn"><i class="fas fa-undo"></i> 전술 시뮬레이터로 돌아가기</a>
+</div>
+
+<div class="shorts-grid">
+    <div class="video-card">
+        <div class="iframe-container">
+            <iframe src="https://www.youtube.com/embed/h44NwDtHxO8" title="스쿱샷 피니쉬" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+            <div class="video-title">스쿱샷 피니쉬 (가드 필수)</div>
+            <div class="video-desc">수비가 버티고 있을 때 템포를 빼앗아 밑으로 올려놓는 기술입니다. 마지막 스텝의 보폭을 길게 가져가는 연습에 제격입니다.</div>
+            <span class="tag">#피니쉬</span><span class="tag">#타이밍</span>
+        </div>
+    </div>
+
+    <div class="video-card">
+        <div class="iframe-container">
+            <iframe src="https://www.youtube.com/embed/vRw23pYxXZ4" title="플로터 기본기" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+            <div class="video-title">플로터 (빅맨 회피)</div>
+            <div class="video-desc">새깅 디펜스 상황에서 깊게 들어가지 않고 블루존 근처에서 한 박자 빠르게 공을 띄워 올리는 필수 감각입니다.</div>
+            <span class="tag">#플로터</span><span class="tag">#슛감각</span>
+        </div>
+    </div>
+
+    <div class="video-card">
+        <div class="iframe-container">
+            <iframe src="https://www.youtube.com/embed/iDlj6SfxqqM" title="앵커 스텝 돌파" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+            <div class="video-title">앵커 스텝 (수비 찢기)</div>
+            <div class="video-desc">수비수와의 거리를 좁히다가 순간적으로 스탠스를 깨뜨리고 퍼스트 스텝을 밟아 나가는 리듬을 확인할 수 있습니다.</div>
+            <span class="tag">#퍼스트스텝</span><span class="tag">#돌파</span>
+        </div>
+    </div>
+
+    <div class="video-card">
+        <div class="iframe-container">
+            <iframe src="https://www.youtube.com/embed/jKsV1zo_cF4" title="파운드 드리블 돌파" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+            <div class="video-title">파운드 & 드롭 스텝</div>
+            <div class="video-desc">드리블을 강하게 치는 동시에 몸을 낮추어(Drop) 수비수의 어깨 아래로 파고드는 움직임의 교보재입니다.</div>
+            <span class="tag">#하체밸런스</span><span class="tag">#드롭</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
