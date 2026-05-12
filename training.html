@@ -5,18 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>농구부 아침 신체 훈련 프로그램</title>
 <style>
-    body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f0f0; margin: 0; padding: 10px 0; line-height: 1.6; }
-    header { text-align: center; padding: 10px; background: #333; color: white; margin-bottom: 15px; border-radius: 8px; margin-left: 10px; margin-right: 10px; }
-    h2 { font-size: 18px; margin: 5px 0; }
+    body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f0f0; margin: 0; padding: 0 0 10px 0; line-height: 1.6; }
     
-    /* 네비게이션 버튼 스타일 */
-    .nav-box { text-align: center; margin-bottom: 20px; }
-    .nav-btn-link { 
-        display: inline-block; padding: 10px 20px; background-color: #e67e22; 
-        color: white; text-decoration: none; border-radius: 25px; font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.2s;
+    /* 글로벌 네비게이션 헤더 */
+    .top-nav {
+        background: #333;
+        padding: 15px 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        text-align: center;
     }
-    .nav-btn-link:hover { background-color: #d35400; }
+    .top-nav h2 {
+        color: white;
+        margin: 0 0 15px 0;
+        font-size: 20px;
+    }
+    .nav-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .nav-btn-link { 
+        display: inline-block; padding: 8px 16px; background-color: #555; 
+        color: white; text-decoration: none; border-radius: 20px; font-weight: bold;
+        font-size: 14px; transition: background-color 0.2s;
+    }
+    .nav-btn-link:hover { background-color: #777; }
+    .nav-btn-link.current { background-color: #e67e22; pointer-events: none; } /* 현재 페이지 색상 */
 
     /* 카드형 레이아웃 구성 */
     .container { max-width: 600px; margin: 0 auto; padding: 0 10px; }
@@ -36,12 +52,13 @@
 </head>
 <body>
 
-<header>
-    <h2>🏃 아침 15분 신체 능력 강화 프로그램</h2>
-</header>
-
-<div class="nav-box">
-    <a href="index.html" class="nav-btn-link">🏀 전술 시뮬레이터로 돌아가기</a>
+<div class="top-nav">
+    <h2>🏀 농구부 디지털 플레이북</h2>
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn-link">전술판</a>
+        <a href="training.html" class="nav-btn-link current">신체 훈련</a>
+        <a href="shorts.html" class="nav-btn-link">쇼츠 영상</a>
+    </div>
 </div>
 
 <div class="container">
@@ -102,7 +119,7 @@
             <div class="tip">💡 상대와 몸이 붙을 때 <span class="highlight">등을 보이지 말기</span></div>
             <div class="tip">💡 접촉 순간에는 <span class="highlight">양 발이 땅에 닿아있기</span></div>
             <div class="tip">💡 무게 중심을 낮추기 위해 <span class="highlight">상대 골반보다 내 골반이 아래에 있기</span></div>
-            <div class="tip">💡 상체의 각도는 <span class="highlight">60도와 45도의 사이</span></div>
+            <div class="tip">💡 상체의 각도는 <span class="highlight">60도와 45도의 사이</span> 유지</div>
         </div>
     </div>
 </div>
