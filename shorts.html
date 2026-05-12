@@ -70,19 +70,13 @@
         border-color: #9b59b6;
     }
 
-    /* 유튜브 쇼츠 비율(9:16) 유지를 위한 래퍼 */
 
+/* 유튜브 쇼츠 비율(9:16) 유지를 위한 래퍼 */
     .iframe-container {
         position: relative;
-        max-width: 100%;
-        
-        /* 핵심 1: 브라우저 상하단 바를 제외한 '실제 보이는 화면'의 65%까지만 높이를 제한 */
-        max-height: 65dvh; 
-        
-        /* 핵심 2: 기존 padding-bottom 방식 대신, 높이에 맞춰 가로 너비가 자동으로 줄어들게 비율 고정 */
-        aspect-ratio: 9 / 16; 
-        
-        margin: 0 auto; /* 크기가 줄어들었을 때 가운데 정렬 */
+        width: 100%;          /* PC 화면에서 사라지는 문제 해결 (필수 값) */
+        aspect-ratio: 9 / 16; /* 세로형 비율 자동 계산 (기존 padding-bottom 대체) */
+        max-height: 65dvh;    /* 모바일 브라우저 위아래 바를 피하기 위한 최대 높이 제한 */
         background-color: #000;
     }
 
