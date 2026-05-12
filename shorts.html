@@ -11,54 +11,45 @@
         background-color: #121212;
         color: #ffffff;
         margin: 0;
-        padding: 0;
+        padding: 0 0 20px 0;
     }
     
-    header {
-        background: linear-gradient(135deg, #e67e22, #d35400);
-        padding: 20px;
+    /* 글로벌 네비게이션 헤더 */
+    .top-nav {
+        background: #333;
+        padding: 15px 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.5);
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         position: sticky;
         top: 0;
         z-index: 100;
     }
-
-    h1 {
-        margin: 0;
-        font-size: 22px;
-        letter-spacing: 1px;
+    .top-nav h2 {
+        color: white;
+        margin: 0 0 15px 0;
+        font-size: 20px;
     }
-
-    .nav-box {
-        text-align: center;
-        margin: 20px 0;
+    .nav-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
     }
-
-    .nav-btn {
-        display: inline-block;
-        padding: 10px 25px;
-        background-color: #34495e;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 14px;
-        transition: 0.3s;
-        border: 1px solid #7f8c8d;
+    .nav-btn-link { 
+        display: inline-block; padding: 8px 16px; background-color: #555; 
+        color: white; text-decoration: none; border-radius: 20px; font-weight: bold;
+        font-size: 14px; transition: background-color 0.2s;
     }
+    .nav-btn-link:hover { background-color: #777; }
+    .nav-btn-link.current { background-color: #9b59b6; pointer-events: none; } /* 현재 페이지 색상 */
 
-    .nav-btn:hover {
-        background-color: #2c3e50;
-        border-color: #e67e22;
-    }
-
-    /* 그리드 레이아웃: 모바일에서는 1열, 태블릿 이상에서는 2~3열 */
+    /* 그리드 레이아웃 */
     .shorts-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
-        padding: 20px;
+        padding: 0 20px;
         max-width: 1200px;
         margin: 0 auto;
     }
@@ -76,14 +67,14 @@
 
     .video-card:hover {
         transform: translateY(-5px);
-        border-color: #e67e22;
+        border-color: #9b59b6;
     }
 
     /* 유튜브 쇼츠 비율(9:16) 유지를 위한 래퍼 */
     .iframe-container {
         position: relative;
         width: 100%;
-        padding-bottom: 177.77%; /* 16:9 비율의 역수 (16/9 = 1.7777) */
+        padding-bottom: 177.77%; /* 16:9 비율의 역수 */
         background-color: #000;
     }
 
@@ -127,12 +118,13 @@
 </head>
 <body>
 
-<header>
-    <h1>🏀 스킬 트레이닝 쇼츠 라이브러리</h1>
-</header>
-
-<div class="nav-box">
-    <a href="index.html" class="nav-btn"><i class="fas fa-undo"></i> 전술 시뮬레이터로 돌아가기</a>
+<div class="top-nav">
+    <h2>🏀 농구부 디지털 플레이북</h2>
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn-link">전술판</a>
+        <a href="training.html" class="nav-btn-link">신체 훈련</a>
+        <a href="shorts.html" class="nav-btn-link current">쇼츠 영상</a>
+    </div>
 </div>
 
 <div class="shorts-grid">
