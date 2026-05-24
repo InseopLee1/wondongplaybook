@@ -82,6 +82,7 @@
     <button onclick="setActiveBtn(this); play9()">9. 갭드라이브 & 킥아웃</button>
     <button onclick="setActiveBtn(this); play10()">10. 오프볼 리로케이션</button>
     <button onclick="setActiveBtn(this); play11()">11. 드리블 앳 (백도어 컷)</button>
+    <button onclick="setActiveBtn(this); play12()">12. 베이스라인 컷 & 다운스크린</button>
     <button onclick="setActiveBtn(this); resetCourt()" style="background-color: #ffcccc; flex: 1 1 100%;">초기화 (처음으로)</button>
 </div>
 
@@ -248,6 +249,60 @@
         timeouts.push(setTimeout(() => { setText("2단계: [공간 비우기] 동료가 내 자리로 오면, 딥윙(O3)은 수비수(X3)의 등 뒤를 파고드는 백도어 컷을 합니다."); move('o3', 260, 60); move('x3', 80, 180); }, 4000));
         timeouts.push(setTimeout(() => { setText("3단계: 컷인하는 O3의 타이밍에 맞춰 바운스 패스나 높게 띄운 패스를 찔러줍니다."); move('ball', 250, 70); }, 5500));
         timeouts.push(setTimeout(() => { move('o3', 285, 50); move('ball', 300, 50); setText("4단계: 수비가 밀착해서 패스 줄 곳이 없는 상황에서 공격 성공"); }, 6500));
+    }
+
+    function play12() {
+        resetCourt(); clearAll(); 
+        setText("초기 세팅: 위크사이드에 3명(코너, 딥윙, 슬롯) 배치. 스트롱사이드에는 슬롯(O2)과 숏코너를 백다운하는 빅맨(O5) 배치.");
+
+        // 전술에 맞춘 초기 위치 커스텀 이동
+        timeouts.push(setTimeout(() => {
+            // 위크사이드 코너(O4)
+            move('o4', 50, 50);
+            
+            // 스트롱사이드 로우포스트 백다운 상황 (O5가 X4를 압박)
+            move('o5', 380, 80);
+            move('x4', 420, 80);
+            
+            // 공을 가진 스트롱사이드 슬롯(O2)과 수비수(X2)
+            move('o2', 420, 380); move('ball', 410, 370);
+            move('x2', 380, 280);
+            
+            // 나머지 위치 조정
+            move('x1', 200, 230); move('x3', 140, 120); move('x5', 285, 120);
+            move('o1', 150, 380); move('o3', 50, 200);
+        }, 500));
+
+        // 1단계: 베이스라인 컷인
+        timeouts.push(setTimeout(() => {
+            setText("1단계: 위크사이드 코너(O4)가 스트롱사이드 코너를 향해 베이스라인을 타고 컷인합니다. 빅맨(O5)의 백다운이 자연스러운 오프볼 스크린 역할을 합니다.");
+            move('o4', 520, 50);
+        }, 2500));
+
+        // 2단계: 패스 및 클로즈아웃
+        timeouts.push(setTimeout(() => {
+            setText("2단계: 슬롯(O2)이 코너(O4)로 패스합니다. O5에게 막혀있던 숏코너 수비수(X4)가 공을 따라 코너로 클로즈아웃을 나갑니다.");
+            move('ball', 510, 60);
+            move('x4', 480, 60); 
+        }, 5000));
+
+        // 3단계: 다운스크린 전환
+        timeouts.push(setTimeout(() => {
+            setText("3단계: 수비수(X4)가 빠져나간 즉시 빅맨(O5)은 자세를 전환하여, 슬롯 수비수(X2)의 측면에 엉덩이를 붙이는 다운스크린을 섭니다.");
+            move('o5', 380, 240); 
+            move('x2', 380, 210); 
+        }, 7500));
+
+        // 4단계: 컷인 및 리턴 패스 득점
+        timeouts.push(setTimeout(() => {
+            setText("4단계: 슬롯 공격수(O2)가 O5의 다운스크린을 이용해 수비수를 떨쳐내고 골밑으로 컷인하며, 코너에서 리턴 패스를 받아 득점합니다.");
+            move('o2', 320, 100); 
+            move('ball', 330, 90); 
+        }, 10000));
+
+        timeouts.push(setTimeout(() => {
+            move('o2', 285, 60); move('ball', 300, 50);
+        }, 12000));
     }
 </script>
 </body>
