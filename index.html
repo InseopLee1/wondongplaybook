@@ -149,7 +149,8 @@
     let timeouts = [];
     function clearAll() { timeouts.forEach(clearTimeout); timeouts = []; }
     function move(id, x, y) { document.getElementById(id).style.left = x + 'px'; document.getElementById(id).style.top = y + 'px'; }
-    function setText(text) { document.getElementById('desc').innerText = text; }
+    // ▼ 수정된 부분: innerText를 innerHTML로 변경하여 HTML 태그가 적용되도록 함
+    function setText(text) { document.getElementById('desc').innerHTML = text; }
 
     function runCurrentExecute() {
         if (executeCurrentPlay) {
