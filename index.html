@@ -358,7 +358,7 @@
         timeouts.push(setTimeout(() => { move('o4', 520, 50); }, 500));
         timeouts.push(setTimeout(() => { setText("2단계: 슬롯(O2)이 코너(O4)로 패스합니다. O5에게 막혀있던 수비수(X4)가 공을 따라 코너로 클로즈아웃을 나갑니다."); move('ball', 510, 60); move('x4', 480, 60); }, 3000));
         timeouts.push(setTimeout(() => { setText("3단계: 수비수(X4)가 빠져나간 즉시 빅맨(O5)은 자세를 전환하여, 슬롯 수비수(X2)의 측면에 엉덩이를 붙이는 다운스크린을 섭니다."); move('o5', 380, 180); move('x2', 380, 210); }, 5500));
-        timeouts.push(setTimeout(() => { setText("4단계: 이 때 공을 가진 공격수(O4) 수비수(X2)의 반응에 따라 O5에게 패스하거나 O2에게 패스할 수 있습니다..");, 8000);
+        timeouts.push(setTimeout(() => { setText("4단계: 이 때 공을 가진 공격수(O4)는 수비수(X2)의 반응에 따라 O5에게 패스하거나 O2에게 패스할 수 있습니다."); }, 8000));
         timeouts.push(setTimeout(() => { setText("5단계: 수비수(X2)가 공격수(O5)와 자리싸움을 하지 않으면 공격수(O5)에게 패스 후 득점."); move('ball', 400, 170); }, 9500));
         timeouts.push(setTimeout(() => { move('o2', 285, 60); move('ball', 300, 50); }, 10000));
     }
