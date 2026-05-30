@@ -88,10 +88,10 @@
     <button onclick="setActiveBtn(this); play9()">9. 오프볼 리로케이션</button>
     <button onclick="setActiveBtn(this); play10()">10. 드리블 앳 (백도어 컷)</button>
     <button onclick="setActiveBtn(this); play11()">11. 베이스라인 컷 & 다운스크린</button>
-    <button onclick="setActiveBtn(this); play12()">12. 빅맨①: 하이포스트 배급형</button>
-    <button onclick="setActiveBtn(this); play13()">13. 빅맨②: 로우포스트 파워형</button>
-    <button onclick="setActiveBtn(this); play14()">14. 빅맨③: 스피드형 블라인드컷</button>
-    <button onclick="setActiveBtn(this); play15()">15. 빅맨④: 스크린 & 오펜스 리바운드</button>
+    <button onclick="setActiveBtn(this); play12()">12. 빅맨①: 하이포스트 패스 캐치</button>
+    <button onclick="setActiveBtn(this); play13()">13. 빅맨②: 로우포스트 1대1</button>
+    <button onclick="setActiveBtn(this); play14()">14. 빅맨③: 로우포스트 패스 & 블라인드컷</button>
+    <button onclick="setActiveBtn(this); play15()">15. 빅맨④: 로우포스트 패스 & 컷</button>
     
     <button onclick="runCurrentExecute()" class="action-btn-exec" style="flex: 1 1 100%;">▶ 전술 실행 (Play)</button>
     <button onclick="resetCourt()" class="action-btn-reset" style="flex: 1 1 100%;">초기화 (처음으로)</button>
@@ -177,7 +177,7 @@
         setText("초기 상태 (수비가 골밑으로 쳐져 있는 2-3 새깅 디펜스)");
     }
 
-    // --- 전술 1 (기존 2번) ---
+    // --- 전술 1 ---
     function play1() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 2-3 새깅 디펜스 (기본 진형). <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -190,7 +190,7 @@
         timeouts.push(setTimeout(() => { move('ball', 300, 50); setText("득점 성공!"); }, 4500));
     }
 
-    // --- 전술 2 (기존 3번) ---
+    // --- 전술 2 ---
     function play2() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 2-3 새깅 디펜스 (기본 진형). <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -206,7 +206,7 @@
         timeouts.push(setTimeout(() => { move('ball', 285, 150); }, 11500));
     }
 
-    // --- 전술 3 (기존 4번) ---
+    // --- 전술 3 ---
     function play3() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 빅맨(O5)이 하이포스트에서 공을 잡고 있습니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -221,7 +221,7 @@
         timeouts.push(setTimeout(() => { move('ball', 300, 50); }, 8500));
     }
 
-    // --- 전술 4 (기존 5번) ---
+    // --- 전술 4 ---
     function play4() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 수비수들이 전체적으로 멀리 떨어져서 수비(=새깅)합니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -238,7 +238,7 @@
         timeouts.push(setTimeout(() => { move('o3', 290, 55); move('ball', 300, 50);}, 11500));
     }
 
-    // --- 전술 5 (기존 6번) ---
+    // --- 전술 5 ---
     function play5() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 2-3 새깅 디펜스 (기본 진형). <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -251,7 +251,7 @@
         timeouts.push(setTimeout(() => { setText("3단계: 반대편으로 빠져나가고, 나머지 선수들이 자리를 당겨 채웁니다."); move('o1', 520, 50); move('o2', 150, 380); move('o4', 420, 380); }, 5500));
     }
 
-    // --- 전술 6 (기존 7번) ---
+    // --- 전술 6 ---
     function play6() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 딥윙(O3)이 공을 잡고 시작합니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -265,7 +265,7 @@
         timeouts.push(setTimeout(() => { setText("3단계: 반대편으로 빠지고, O1이 딥윙으로 내려오며 자리를 맞춥니다."); move('o3', 520, 100); move('o1', 50, 200); move('ball', 70, 190); move('o2', 150, 380); move('o4', 420, 380); }, 6500));
     }
 
-    // --- 전술 7 (기존 8번) ---
+    // --- 전술 7 ---
     function play7() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 슬롯(O1)이 딥윙(O3)에게 먼저 패스하며 공격을 시작합니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -282,7 +282,7 @@
         timeouts.push(setTimeout(() => { move('o4', 285, 60); move('ball', 300, 50); }, 14500));
     }
 
-    // --- 전술 8 (기존 9번) ---
+    // --- 전술 8 ---
     function play8() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 슬롯(O1)이 반대편 슬롯(O2)에게 패스합니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -299,7 +299,7 @@
         timeouts.push(setTimeout(() => { setText("5단계: 완벽한 돌파로 득점 성공!"); move('o4', 285, 60); move('ball', 300, 50); }, 13100));
     }
 
-    // --- 전술 9 (기존 10번) ---
+    // --- 전술 9 ---
     function play9() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 슬롯(O1)이 공을 잡고 있으나 수비가 쳐져(새깅) 패스 길이 좁습니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -314,7 +314,7 @@
         timeouts.push(setTimeout(() => { move('ball', 290, 50); setText("4단계: 제자리에 서있지 않고 빈 공간을 영리하게 찾아 움직인 덕분에 득점 성공!"); }, 8500));
     }
 
-    // --- 전술 10 (기존 11번) ---
+    // --- 전술 10 ---
     function play10() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 모든 패스 길이 막혀, 슬롯(O1)이 딥윙(O3) 방향으로 직접 드리블을 시작합니다. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -329,7 +329,7 @@
         timeouts.push(setTimeout(() => { move('o3', 285, 50); move('ball', 300, 50); setText("4단계: 수비가 밀착해서 패스 줄 곳이 없는 상황에서 공격 성공"); }, 7500));
     }
 
-    // --- 전술 11 (기존 12번) ---
+    // --- 전술 11 ---
     function play11() {
         resetCourt(); clearAll(); 
         setText("초기 세팅: 공이 없는 곳에 3명 배치, 공이 있는 곳에 슬롯(O2)과 수비수와 등을 지고 있는 빅맨(O5)이 있음. <br>[전술 실행] 버튼을 눌러 시작하세요.");
@@ -352,37 +352,37 @@
         timeouts.push(setTimeout(() => { move('o5', 285, 60); move('ball', 300, 50); }, 16000));
     }
 
-    // --- 전술 12 (기존 13번) ---
+    // --- 전술 12 ---
     function play12() {
         resetCourt(); clearAll();
-        setText("초기 세팅: [배급형 빅맨] 시야가 넓고 미들슛이 좋은 선수가 하이포스트(O5)에 대기합니다. <br>[전술 실행] 버튼을 누르세요.");
+        setText("초기 세팅: [하이포스트 빅맨] 시야가 넓고 미들슛이 좋은 선수가 하이포스트(O5)에 대기합니다. <br>[전술 실행] 버튼을 누르세요.");
         move('o5', 285, 230); move('x5', 285, 180); move('ball', 170, 370);
         executeCurrentPlay = execute12;
     }
     function execute12() {
-        setText("1단계: 슬롯(O1)이 하이포스트의 컨트롤 타워(O5)에게 볼을 투입합니다.");
+        setText("1단계: 슬롯(O1)이 하이포스트의 빅맨(O5)에게 볼을 투입합니다.");
         timeouts.push(setTimeout(() => { move('ball', 285, 240); }, 500));
         timeouts.push(setTimeout(() => { setText("2단계: 볼이 투입되는 순간, 딥윙(O3)이 수비의 사각지대인 베이스라인으로 컷인합니다."); move('o3', 150, 50); move('x3', 140, 90); }, 3000));
         timeouts.push(setTimeout(() => { setText("3단계: 하이포스트의 빅맨이 지체 없이 컷인하는 동료에게 찔러주어 득점합니다."); move('ball', 160, 60); }, 6000));
         timeouts.push(setTimeout(() => { move('o3', 285, 60); move('ball', 300, 50); }, 8000));
     }
 
-    // --- 전술 13 (기존 14번) ---
+    // --- 전술 13 ---
     function play13() {
         resetCourt(); clearAll();
-        setText("초기 세팅: [파워형 빅맨] 몸싸움이 좋은 선수가 로우포스트(O5) 깊숙이 자리 잡습니다. <br>[전술 실행] 버튼을 누르세요.");
-        move('o5', 400, 100); move('x5', 360, 100); 
-        move('o2', 420, 380); move('x2', 380, 280); move('ball', 410, 370);
+        setText("초기 세팅: [로우포스트 빅맨] 몸싸움이 좋은 선수가 로우포스트(O5) 깊숙이 자리 잡습니다. <br>[전술 실행] 버튼을 누르세요.");
+        move('o5', 400, 80); move('x5', 360, 75); 
+        move('o2', 420, 380); move('x2', 380, 280); move('ball', 520, 200); move('x4', 460, 180);
         executeCurrentPlay = execute13;
     }
     function execute13() {
-        setText("1단계: 슬롯(O2)이 로우포스트의 빅맨(O5)에게 엔트리 패스를 넣습니다.");
+        setText("1단계: 윙(O4)이나 슬롯(O2)이 로우포스트의 빅맨(O5)에게 엔트리 패스를 넣습니다.");
         timeouts.push(setTimeout(() => { move('ball', 410, 110); }, 500));
         timeouts.push(setTimeout(() => { setText("2단계: 패스를 잡은 즉시 바닥에 공을 한 번 강하게 튀기며(1-Pound) 수비수 뒤쪽으로 발을 뻗습니다(드롭스텝)."); move('o5', 350, 80); move('ball', 360, 80); move('x5', 320, 80); }, 3000));
         timeouts.push(setTimeout(() => { setText("3단계: 강한 몸싸움으로 수비를 밀어내고 그대로 골밑 슛을 올려 득점합니다."); move('o5', 285, 60); move('ball', 300, 50); }, 6000));
     }
 
-    // --- 전술 14 (기존 15번) ---
+    // --- 전술 14 ---
     function play14() {
         resetCourt(); clearAll();
         setText("초기 세팅: [스피드형 빅맨] 공은 스트롱사이드에 있고, 발 빠른 빅맨(O5)은 위크사이드에 대기합니다. <br>[전술 실행] 버튼을 누르세요.");
@@ -399,24 +399,26 @@
         timeouts.push(setTimeout(() => { move('o5', 285, 60); move('ball', 300, 50); }, 8000));
     }
 
-    // --- 전술 15 (기존 16번) ---
+    // --- 전술 15 (새로 추가된 로우포스트 패스 & 컷) ---
     function play15() {
         resetCourt(); clearAll();
-        setText("초기 세팅: [스크린/리바운드형 빅맨] 슬롯(O1)이 공 소유, 빅맨(O5)이 외곽 스크린을 준비합니다. <br>[전술 실행] 버튼을 누르세요.");
-        move('ball', 140, 370); move('o1', 150, 380);
-        move('o3', 50, 200); move('x3', 100, 180);
-        move('o5', 100, 120); move('x5', 150, 120);
+        setText("초기 세팅: [로우포스트 패스 & 컷] 딥윙(O3)이 공을 가지고 있고, 빅맨(O5)이 같은 쪽 로우포스트에 대기합니다. <br>[전술 실행] 버튼을 누르세요.");
+        move('o3', 50, 200); move('ball', 70, 190); move('x3', 130, 180);
+        move('o5', 150, 80); move('x5', 190, 80);
+        move('o1', 200, 380); move('x1', 250, 230);
         executeCurrentPlay = execute15;
     }
     function execute15() {
-        setText("1단계: 기술이 투박한 빅맨(O5)은 직접 득점을 노리기보다 동료(O3)를 위해 견고한 다운 스크린을 섭니다.");
-        timeouts.push(setTimeout(() => { move('o5', 60, 160); }, 500));
-        timeouts.push(setTimeout(() => { setText("2단계: O3가 스크린을 타고 나와 O1의 패스를 받아 외곽 슛을 던집니다."); move('o3', 150, 150); move('x3', 60, 170); }, 3000));
-        timeouts.push(setTimeout(() => { move('ball', 140, 160); }, 4500));
-        timeouts.push(setTimeout(() => { move('ball', 290, 50); }, 6000));
-        timeouts.push(setTimeout(() => { setText("3단계: 슛이 날아가는 즉시 빅맨(O5)은 수비수를 등지고 박스아웃하며, 공격 리바운드를 잡아 풋백 득점을 올립니다."); move('o5', 260, 70); move('x5', 200, 80); }, 8000));
-        timeouts.push(setTimeout(() => { move('ball', 270, 70); }, 10500));
-        timeouts.push(setTimeout(() => { move('ball', 300, 50); }, 12000));
+        setText("1단계: 딥윙(O3)이 로우포스트의 빅맨(O5)에게 엔트리 패스를 투입합니다.");
+        timeouts.push(setTimeout(() => { move('ball', 140, 90); }, 500));
+        
+        timeouts.push(setTimeout(() => { setText("2단계: 패스 직후, 수비수(X3)가 공을 쳐다보며(Ball-watching) 빅맨 쪽으로 몸을 돌립니다."); move('x3', 140, 130); }, 2500));
+        
+        timeouts.push(setTimeout(() => { setText("3단계: O3는 수비수의 사각지대(등 뒤)를 파고들어 림을 향해 과감하게 컷인합니다."); move('o3', 280, 60); move('x3', 180, 100); }, 5000));
+        
+        timeouts.push(setTimeout(() => { setText("4단계: 빅맨(O5)이 컷인하는 O3에게 정확하게 패스를 내어주고 손쉬운 레이업 득점을 올립니다."); move('ball', 250, 60); }, 7500));
+        
+        timeouts.push(setTimeout(() => { move('o3', 285, 60); move('ball', 300, 50); }, 9000));
     }
 </script>
 </body>
