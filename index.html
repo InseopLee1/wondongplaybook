@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>4-Out 1-In 모션 오펜스 시뮬레이터</title>
-<style>
-    body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; padding: 0 0 10px 0; }
-    
-    /* 글로벌 네비게이션 헤더 */
-    .top-nav {
-        background: #333;
-        padding: 15px 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    .top-nav h2 {
-        color: white;
-        margin: 0 0 15px 0;
-        font-size: 20px;
-    }
-    .nav-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    .nav-btn-link { 
-        display: inline-block; padding: 8px 16px; background-color: #555; 
-        color: white; text-decoration: none; border-radius: 20px; font-weight: bold;
-        font-size: 14px; transition: background-color 0.2s;
-    }
-    .nav-btn-link:hover { background-color: #777; }
-    .nav-btn-link.current { background-color: #3498db; pointer-events: none; } /* 현재 페이지 색상 */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>4-Out 1-In 모션 오펜스 시뮬레이터</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; padding: 0 0 10px 0; }
+        
+        /* 글로벌 네비게이션 헤더 */
+        .top-nav {
+            background: #333;
+            padding: 15px 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .top-nav h2 {
+            color: white;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-btn-link { 
+            display: inline-block; padding: 8px 16px; background-color: #555; 
+            color: white; text-decoration: none; border-radius: 20px; font-weight: bold;
+            font-size: 14px; transition: background-color 0.2s;
+        }
+        .nav-btn-link:hover { background-color: #777; }
+        .nav-btn-link.current { background-color: #3498db; pointer-events: none; } /* 현재 페이지 색상 */
 
-    /* 모바일 환경에 맞춘 버튼 레이아웃 */
-    .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 10px; max-width: 600px; margin: 0 auto; }
-    button { 
-        flex: 1 1 45%; padding: 12px 5px; font-size: 13px; font-weight: bold; cursor: pointer; 
-        border-radius: 8px; border: 1px solid #aaa; background-color: #fff;
-        touch-action: manipulation; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: background-color 0.2s;
-    }
-    button:hover, button:active { background-color: #ddd; }
-    .active-btn { background-color: #ffeb3b !important; border: 2px solid #f57f17 !important; color: #000 !important; }
-    
-    /* 실행 및 초기화 버튼 특수 스타일 */
-    .action-btn-exec { background-color: #2ecc71 !important; color: white !important; font-size: 15px; border-color: #27ae60 !important; }
-    .action-btn-exec:hover { background-color: #27ae60 !important; }
-    .action-btn-reset { background-color: #ffcccc !important; color: #333 !important; }
+        /* 모바일 환경에 맞춘 버튼 레이아웃 */
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 10px; max-width: 600px; margin: 0 auto; }
+        button { 
+            flex: 1 1 45%; padding: 12px 5px; font-size: 13px; font-weight: bold; cursor: pointer; 
+            border-radius: 8px; border: 1px solid #aaa; background-color: #fff;
+            touch-action: manipulation; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+        button:hover, button:active { background-color: #ddd; }
+        .active-btn { background-color: #ffeb3b !important; border: 2px solid #f57f17 !important; color: #000 !important; }
+        
+        /* 실행 및 초기화 버튼 특수 스타일 */
+        .action-btn-exec { background-color: #2ecc71 !important; color: white !important; font-size: 15px; border-color: #27ae60 !important; }
+        .action-btn-exec:hover { background-color: #27ae60 !important; }
+        .action-btn-reset { background-color: #ffcccc !important; color: #333 !important; }
 
-    #desc { margin: 15px auto; font-size: 15px; font-weight: bold; color: #111; min-height: 45px; max-width: 580px; word-break: keep-all; padding: 0 10px; line-height: 1.4; }
+        #desc { margin: 15px auto; font-size: 15px; font-weight: bold; color: #111; min-height: 45px; max-width: 580px; word-break: keep-all; padding: 0 10px; line-height: 1.4; }
 
-    /* 코트 화면 래퍼 */
-    #court-wrapper { width: 100%; display: flex; justify-content: center; overflow: hidden; margin-top: 10px; }
-    #court { width: 600px; height: 500px; background-color: #f4c28d; border: 4px solid #333; position: relative; flex-shrink: 0; transform-origin: top center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .line { position: absolute; border: 2px solid white; box-sizing: border-box; }
-    .paint { width: 160px; height: 230px; border-bottom: none; left: 220px; top: 0; background-color: #d18b47; }
-    .three-point { width: 480px; height: 480px; border-radius: 50%; left: 60px; top: -140px; clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%); }
-    .rim { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #e74c3c; left: 285px; top: 40px; background: white; }
-    .player { width: 30px; height: 30px; border-radius: 50%; position: absolute; color: white; font-weight: bold; line-height: 30px; font-size: 14px; transition: all 1.5s ease-in-out; z-index: 10; }
-    .offense { background-color: #3498db; border: 2px solid #2980b9; }
-    .defense { background-color: transparent; border: 2px solid #c0392b; color: #c0392b; }
-    .ball { width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute; transition: all 1.5s ease-in-out; z-index: 20; border: 1px solid #d35400; }
-</style>
+        /* 코트 화면 래퍼 */
+        #court-wrapper { width: 100%; display: flex; justify-content: center; overflow: hidden; margin-top: 10px; }
+        #court { width: 600px; height: 500px; background-color: #f4c28d; border: 4px solid #333; position: relative; flex-shrink: 0; transform-origin: top center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .line { position: absolute; border: 2px solid white; box-sizing: border-box; }
+        .paint { width: 160px; height: 230px; border-bottom: none; left: 220px; top: 0; background-color: #d18b47; }
+        .three-point { width: 480px; height: 480px; border-radius: 50%; left: 60px; top: -140px; clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%); }
+        .rim { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #e74c3c; left: 285px; top: 40px; background: white; }
+        .player { width: 30px; height: 30px; border-radius: 50%; position: absolute; color: white; font-weight: bold; line-height: 30px; font-size: 14px; transition: all 1.5s ease-in-out; z-index: 10; }
+        .offense { background-color: #3498db; border: 2px solid #2980b9; }
+        .defense { background-color: transparent; border: 2px solid #c0392b; color: #c0392b; }
+        .ball { width: 16px; height: 16px; border-radius: 50%; background-color: #e67e22; position: absolute; transition: all 1.5s ease-in-out; z-index: 20; border: 1px solid #d35400; }
+    </style>
 </head>
 <body>
 
@@ -73,6 +73,7 @@
         <a href="training.html" class="nav-btn-link">신체 훈련</a>
         <a href="shorts.html" class="nav-btn-link">쇼츠 영상</a>
         <a href="defense.html" class="nav-btn-link">수비&리바운드</a>
+        <a href="guide.html" class="nav-btn-link">플레이 가이드</a>
     </div>
 </div>
 
@@ -399,7 +400,7 @@
         timeouts.push(setTimeout(() => { move('o5', 285, 60); move('ball', 300, 50); }, 8000));
     }
 
-    // --- 전술 15 (새로 추가된 로우포스트 패스 & 컷) ---
+    // --- 전술 15 ---
     function play15() {
         resetCourt(); clearAll();
         setText("초기 세팅: [로우포스트 패스 & 컷] 딥윙(O3)이 공을 가지고 있고, 빅맨(O5)이 같은 쪽 로우포스트에 대기합니다. <br>[전술 실행] 버튼을 누르세요.");
