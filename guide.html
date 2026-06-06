@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인터랙티브 슬롯 & 딥윙 플레이 가이드</title>
+    <style>
+        :root {
+            --primary-color: #e65100;
+            --court-wood: #f4b870;
+            --court-line: #ffffff;
+            --offense: #1e88e5;
+            --defense: #e53935;
+            --bg-color: #f4f6f9;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.05rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border-top: 5px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 코트 작전판 스타일 (16:9 비율) */
+        .court-board {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: var(--court-wood);
+            border-bottom: 3px solid var(--court-line);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .paint-zone {
+            position: absolute;
+            bottom: 0;
+            left: 35%;
+            width: 30%;
+            height: 55%;
+            border: 2px solid var(--court-line);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .free-throw-circle {
+            position: absolute;
+            bottom: 55%;
+            left: 35%;
+            width: 30%;
+            aspect-ratio: 1 / 1;
+            border: 2px solid var(--court-line);
+            border-radius: 50%;
+            transform: translateY(50%);
+        }
+
+        .three-point-line {
+            position: absolute;
+            bottom: 0;
+            left: 15%;
+            width: 70%;
+            height: 90%;
+            border: 2px solid var(--court-line);
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            width: 6%;
+            aspect-ratio: 1 / 1;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            z-index: 5;
+        }
+
+        /* 선수 아이콘 */
+        .player {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .player.offense { background-color: var(--offense); box-shadow: 0 0 0 2px #fff; }
+        .player.defense { background-color: var(--defense); }
+        .player.ball::after {
+            content: '🏀';
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 14px;
+        }
+
+        /* 화살표 SVG 레이어 (16:9 비율에 맞춘 좌표계 사용) */
+        .svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .card-content {
+            padding: 20px 25px;
+            flex-grow: 1;
+        }
+        
+        .card-content h2 { 
+            margin-top: 0; 
+            font-size: 1.4rem; 
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .card-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .interactive-li {
+            position: relative;
+            padding: 12px 12px 12px 30px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #444;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .interactive-li:hover {
+            background-color: #fff3e0;
+        }
+
+        .interactive-li.active {
+            background-color: #fff3e0;
+            border: 1px solid #ffcc80;
+            box-shadow: 0 2px 5px rgba(230, 81, 0, 0.1);
+        }
+
+        .interactive-li::before {
+            content: '🏀';
+            position: absolute;
+            left: 8px;
+            top: 14px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .interactive-li.active::before {
+            opacity: 1;
+        }
+
+        .interactive-li strong {
+            display: block;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+
+        .scenario {
+            display: none;
+        }
+        .scenario.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<svg style="width:0; height:0; position:absolute;">
+    <defs>
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e88e5" />
+        </marker>
+        <marker id="arrow-black" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#e53935" />
+        </marker>
+    </defs>
+</svg>
+
+<div class="container">
+    <div class="header">
+        <h1>슬롯 & 딥윙 플레이 가이드</h1>
+        <p>💡 각 카드의 <strong>텍스트를 클릭</strong>하시면 작전판 이미지가 해당 상황에 맞게 애니메이션으로 바뀝니다!</p>
+    </div>
+
+    <div class="grid-container">
+
+        <div class="card">
+            <div class="court-board">
+                <div class="three-point-line"></div>
+                <div class="free-throw-circle"></div>
+                <div class="paint-zone"></div>
+                <div class="basket"></div>
+
+                <div id="drive-scen-1" class="scenario active">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="48" y1="13.5" x2="64" y2="49.5" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player defense" style="left: 30%; top: 25%;">X</div>
+                    <div class="player offense ball" style="left: 30%; top: 15%;">1</div>
+                </div>
+
+                <div id="drive-scen-2" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="80" y1="13.5" x2="80" y2="49.5" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player defense" style="left: 25%; top: 25%;">X1</div>
+                    <div class="player defense" style="left: 75%; top: 25%;">X2</div>
+                    <div class="player offense ball" style="left: 50%; top: 15%;">1</div>
+                </div>
+
+                <div id="drive-scen-3" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="80" y1="13.5" x2="80" y2="27" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player defense" style="left: 50%; top: 40%;">X</div>
+                    <div class="player offense ball" style="left: 50%; top: 15%;">1</div>
+                </div>
+
+                <div id="drive-scen-4" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90">
+                        <path d="M 24 72 Q 40 55 78 79" fill="transparent" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" />
+                        <line x1="72" y1="76.5" x2="40" y2="70" stroke="#e53935" stroke-width="1.5" stroke-dasharray="2,2" marker-end="url(#arrow-red)" />
+                    </svg>
+                    <div class="player defense" style="left: 45%; top: 85%;">X</div>
+                    <div class="player offense ball" style="left: 15%; top: 80%;">2</div>
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <h2>1. 돌파 (Drive)</h2>
+                <ul>
+                    <li class="interactive-li drive-btn active" onclick="changeScenario('drive', 1)">
+                        <strong>상대팀이 밀착했거나 튀어나올 때</strong>
+                        하이포스트나 엘보 쪽으로 돌파 후 상황을 판단합니다.
+                    </li>
+                    <li class="interactive-li drive-btn" onclick="changeScenario('drive', 2)">
+                        <strong>앞선 수비(X1, X2)가 양 옆으로 퍼져 진입로가 뚫렸을 때</strong>
+                        직접 드리블로 하이포스트 진입 후 점퍼, 패스, 킥아웃을 선택합니다.
+                    </li>
+                    <li class="interactive-li drive-btn" onclick="changeScenario('drive', 3)">
+                        <strong>상대 앞선 수비가 멀리 떨어져서 거리를 둘 때</strong>
+                        수비 쪽으로 짧은 드리블 후 점프슛을 쏘거나, 수비를 모은 후 패스합니다.
+                    </li>
+                    <li class="interactive-li drive-btn" onclick="changeScenario('drive', 4)">
+                        <strong>딥윙) 상대 중 골밑에 있던 선수를 돌파할 수 있을 때</strong>
+                        망설임 없이 골대 쪽으로 적극적으로 돌파해서 레이업을 시도합니다.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="court-board">
+                <div class="three-point-line"></div>
+                <div class="free-throw-circle"></div>
+                <div class="paint-zone"></div>
+                <div class="basket"></div>
+
+                <div id="pass-scen-1" class="scenario active">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="48" y1="13.5" x2="78" y2="48" stroke="#333" stroke-dasharray="3,3" stroke-width="1.5" marker-end="url(#arrow-black)" /></svg>
+                    <div class="player offense ball" style="left: 30%; top: 15%;">1</div>
+                    <div class="player offense" style="left: 50%; top: 55%;">5</div>
+                </div>
+
+                <div id="pass-scen-2" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="48" y1="13.5" x2="26" y2="39" stroke="#333" stroke-dasharray="3,3" stroke-width="1.5" marker-end="url(#arrow-black)" /></svg>
+                    <div class="player offense ball" style="left: 30%; top: 15%;">1</div>
+                    <div class="player defense" style="left: 40%; top: 35%;">X</div>
+                    <div class="player offense" style="left: 15%; top: 45%;">2</div>
+                </div>
+
+                <div id="pass-scen-3" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="48" y1="22.5" x2="48" y2="9" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player defense" style="left: 30%; top: 35%;">X</div>
+                    <div class="player offense ball" style="left: 30%; top: 25%;">1</div>
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h2>2. 패스 (Pass)</h2>
+                <ul>
+                    <li class="interactive-li pass-btn active" onclick="changeScenario('pass', 1)">
+                        <strong>하이포스트에 공간이 있을 때</strong>
+                        빅맨이 올라오는 중이거나, 수비가 좁히지 않으면 패스합니다.
+                    </li>
+                    <li class="interactive-li pass-btn" onclick="changeScenario('pass', 2)">
+                        <strong>하이포스트에 공간이 없을 때</strong>
+                        옆 선수가 느슨한 견제를 받으면 즉시 패스합니다.
+                    </li>
+                    <li class="interactive-li pass-btn" onclick="changeScenario('pass', 3)">
+                        <strong>공간이 안 보이고 위험할 때 (Reset)</strong>
+                        공을 보호하면서 시야를 넓혀 천천히 뒤로 물러나 상황을 지켜봅니다.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="court-board">
+                <div class="three-point-line"></div>
+                <div class="free-throw-circle"></div>
+                <div class="paint-zone"></div>
+                <div class="basket"></div>
+
+                <div id="cut-scen-1" class="scenario active">
+                    <svg class="svg-layer" viewBox="0 0 160 90">
+                        <line x1="32" y1="40.5" x2="72" y2="40.5" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" />
+                    </svg>
+                    <div class="player defense" style="left: 58%; top: 82%;">X</div>
+                    <div class="player offense ball" style="left: 65%; top: 75%;">5</div>
+                    <div class="player offense" style="left: 20%; top: 45%;">2</div>
+                </div>
+
+                <div id="cut-scen-2" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><path d="M 136 72 Q 110 85 84 80" fill="transparent" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player offense ball" style="left: 50%; top: 55%;">5</div>
+                    <div class="player defense" style="left: 75%; top: 65%;">X</div>
+                    <div class="player offense" style="left: 85%; top: 80%;">2</div>
+                </div>
+
+                <div id="cut-scen-3" class="scenario">
+                    <svg class="svg-layer" viewBox="0 0 160 90"><line x1="136" y1="40.5" x2="114" y2="33" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" /></svg>
+                    <div class="player offense ball" style="left: 50%; top: 15%;">1</div>
+                    <div class="player defense" style="left: 60%; top: 25%;">X1</div>
+                    <div class="player defense" style="left: 90%; top: 45%;">X2</div>
+                    <div class="player offense" style="left: 85%; top: 45%;">2</div>
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h2>3. 컷인 (Cut-in)</h2>
+                <ul>
+                    <li class="interactive-li cut-btn active" onclick="changeScenario('cut', 1)">
+                        <strong>하이포스트 공간이 넓을 때</strong>
+                        빅맨이 공을 잡았거나 강한 견제를 받을 때, 빈 공간으로 직접 컷인합니다.
+                    </li>
+                    <li class="interactive-li cut-btn" onclick="changeScenario('cut', 2)">
+                        <strong>하이포스트 투입 직후</strong>
+                        수비 시선이 공에 쏠리면 베이스라인을 따라 백도어 컷을 들어갑니다.
+                    </li>
+                    <li class="interactive-li cut-btn" onclick="changeScenario('cut', 3)">
+                        <strong>수비 간격이 벌어져 있을 때</strong>
+                        수비수 사이의 넓은 공간(Gap)으로 영리하게 이동해 패스를 요구합니다.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="court-board">
+                <div class="three-point-line"></div>
+                <div class="free-throw-circle"></div>
+                <div class="paint-zone"></div>
+                <div class="basket"></div>
+
+                <div id="sup-scen-1" class="scenario active">
+                    <svg class="svg-layer" viewBox="0 0 160 90">
+                        <line x1="24" y1="72" x2="24" y2="38" stroke="#1e88e5" stroke-width="1.5" marker-end="url(#arrow-blue)" />
+                        <line x1="48" y1="13.5" x2="26" y2="36" stroke="#333" stroke-dasharray="3,3" stroke-width="1.5" marker-end="url(#arrow-black)" />
+                    </svg>
+                    <div class="player offense ball" style="left: 30%; top: 15%;">1</div>
+                    <div class="player defense" style="left: 30%; top: 25%;">X</div>
+                    <div class="player defense" style="left: 40%; top: 18%;">X</div>
+                    <div class="player offense" style="left: 15%; top: 80%;">2</div>
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h2>4. 기타 / 위기 대처</h2>
+                <ul>
+                    <li class="interactive-li sup-btn active" onclick="changeScenario('sup', 1)">
+                        <strong>동료가 극심한 1:1 견제나 트랩에 갇혔을 때</strong>
+                        빈 공간(위쪽)으로 신속하게 이동(Lift)하여 안전한 패스 길을 열어주고 상황을 리셋합니다.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function changeScenario(category, scenarioNumber) {
+        // 1. 해당 카테고리의 모든 시나리오 이미지를 숨김
+        const allScenarios = document.querySelectorAll(`[id^="${category}-scen-"]`);
+        allScenarios.forEach(scen => {
+            scen.classList.remove('active');
+        });
+
+        // 2. 선택된 시나리오 이미지만 표시
+        const targetScenario = document.getElementById(`${category}-scen-${scenarioNumber}`);
+        if(targetScenario) {
+            targetScenario.classList.add('active');
+        }
+
+        // 3. 해당 카테고리의 모든 버튼 하이라이트 해제
+        const allButtons = document.querySelectorAll(`.${category}-btn`);
+        allButtons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // 4. 클릭한 항목 활성화
+        if(allButtons[scenarioNumber - 1]) {
+            allButtons[scenarioNumber - 1].classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>
